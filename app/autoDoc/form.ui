@@ -31,6 +31,21 @@
      <property name="leftMargin">
       <number>0</number>
      </property>
+     <item row="4" column="0">
+      <widget class="QPushButton" name="TableFileButton">
+       <property name="font">
+        <font>
+         <family>Bahnschrift SemiBold</family>
+         <pointsize>16</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Задать файл, из которого информация будет взята</string>
+       </property>
+      </widget>
+     </item>
      <item row="7" column="0" colspan="2">
       <widget class="QLabel" name="WaitingLabel">
        <property name="font">
@@ -48,6 +63,22 @@
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
+     </item>
+     <item row="5" column="0" colspan="2">
+      <spacer name="SpacerYouMotherfucker">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>5</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
      </item>
      <item row="2" column="0" colspan="2">
       <widget class="QPushButton" name="LoadNewConfigButton">
@@ -120,21 +151,6 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLabel" name="NameOfFileLabel">
-       <property name="font">
-        <font>
-         <family>Bahnschrift SemiBold</family>
-         <pointsize>16</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="text">
-        <string>Имя нового файла (без расширения)</string>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0">
       <widget class="QPushButton" name="SetSavePathButton">
        <property name="font">
@@ -150,8 +166,8 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QLineEdit" name="NameOfFileInput">
+     <item row="4" column="1">
+      <widget class="QLabel" name="TableFileLabel">
        <property name="font">
         <font>
          <family>Bahnschrift SemiBold</family>
@@ -160,29 +176,13 @@
          <bold>true</bold>
         </font>
        </property>
-       <property name="inputMask">
-        <string comment="Имя файла (без расширения)"/>
-       </property>
        <property name="text">
-        <string/>
+        <string>Файл не задан</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
-     </item>
-     <item row="5" column="0" colspan="2">
-      <spacer name="SpacerYouMotherfucker">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Fixed</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>5</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>

@@ -1,5 +1,7 @@
 # C++ + Python. NOICE
 /app/autoDoc/.idea
+/app/autoDoc/__*
+*.pyproject
 
 # C++ objects and libs
 *.slo
