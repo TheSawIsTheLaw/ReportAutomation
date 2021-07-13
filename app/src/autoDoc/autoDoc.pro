@@ -9,14 +9,21 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    autodocconfiguration.cpp \
+    facade.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    organisationschoicewindow.cpp
 
 HEADERS += \
-    mainwindow.hpp
+    autodocconfiguration.hpp \
+    facade.hpp \
+    mainwindow.hpp \
+    organisationschoicewindow.hpp
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    organisationschoicewindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
