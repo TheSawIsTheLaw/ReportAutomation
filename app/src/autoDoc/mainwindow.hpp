@@ -28,6 +28,8 @@ private slots:
 
     void on_TableFileButton_clicked();
 
+    void on_LoadNewConfigButton_clicked();
+
 private:
     Facade *facade = nullptr;
 

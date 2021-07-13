@@ -18,10 +18,10 @@
     <widget class="QLabel" name="choiceLabel">
      <property name="font">
       <font>
-       <family>Bahnschrift SemiBold</family>
+       <family>Century Gothic</family>
        <pointsize>16</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
+       <weight>50</weight>
+       <bold>false</bold>
       </font>
      </property>
      <property name="text">
@@ -34,6 +34,11 @@
    </item>
    <item row="1" column="1">
     <widget class="QDialogButtonBox" name="buttonsGroup">
+     <property name="font">
+      <font>
+       <family>Century Gothic</family>
+      </font>
+     </property>
      <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>

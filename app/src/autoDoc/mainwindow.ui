@@ -23,36 +23,69 @@
       <property name="leftMargin">
        <number>0</number>
       </property>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="TableFileButton">
+      <item row="3" column="0">
+       <widget class="QPushButton" name="SetSavePathButton">
         <property name="font">
          <font>
-          <family>Bahnschrift SemiBold</family>
+          <family>Century Gothic</family>
           <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
-         <string>Задать файл, из которого информация будет взята</string>
+         <string>Задать путь сохранения</string>
         </property>
        </widget>
       </item>
-      <item row="7" column="0" colspan="2">
-       <widget class="QLabel" name="StatusLabel">
+      <item row="1" column="0" colspan="2">
+       <widget class="QLabel" name="NameLabel">
         <property name="font">
          <font>
-          <family>Bahnschrift SemiBold</family>
+          <family>Century Gothic</family>
           <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
+        <property name="layoutDirection">
+         <enum>Qt::RightToLeft</enum>
+        </property>
         <property name="text">
-         <string>Ожидание действий от пользователя</string>
+         <string>Автоматизированное создание отчётов (ну почти)</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLabel" name="TableFileLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <family>Century Gothic</family>
+          <pointsize>12</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Файл не задан</string>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -72,14 +105,29 @@
         </property>
        </spacer>
       </item>
+      <item row="4" column="0">
+       <widget class="QPushButton" name="TableFileButton">
+        <property name="font">
+         <font>
+          <family>Century Gothic</family>
+          <pointsize>16</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Задать файл, из которого информация будет взята</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="0" colspan="2">
        <widget class="QPushButton" name="LoadNewConfigButton">
         <property name="font">
          <font>
-          <family>Bahnschrift SemiBold</family>
+          <family>Century Gothic</family>
           <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
@@ -91,35 +139,14 @@
        <widget class="QPushButton" name="MakeReportButton">
         <property name="font">
          <font>
-          <family>Bahnschrift SemiBold</family>
+          <family>Century Gothic</family>
           <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
+          <weight>50</weight>
+          <bold>false</bold>
          </font>
         </property>
         <property name="text">
          <string>Исполнить предначертанное</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" colspan="2">
-       <widget class="QLabel" name="NameLabel">
-        <property name="font">
-         <font>
-          <family>Bahnschrift SemiBold</family>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::RightToLeft</enum>
-        </property>
-        <property name="text">
-         <string>Автоматизированное создание отчётов (ну почти)</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
         </property>
        </widget>
       </item>
@@ -133,61 +160,16 @@
         </property>
         <property name="font">
          <font>
-          <family>Bahnschrift SemiBold</family>
+          <family>Century Gothic</family>
           <pointsize>12</pointsize>
-          <weight>75</weight>
+          <weight>50</weight>
           <italic>false</italic>
-          <bold>true</bold>
+          <bold>false</bold>
           <underline>false</underline>
          </font>
         </property>
         <property name="text">
          <string>Путь не задан</string>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QPushButton" name="SetSavePathButton">
-        <property name="font">
-         <font>
-          <family>Bahnschrift SemiBold</family>
-          <pointsize>16</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Задать путь сохранения</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="1">
-       <widget class="QLabel" name="TableFileLabel">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <family>Bahnschrift SemiBold</family>
-          <pointsize>12</pointsize>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Файл не задан</string>
         </property>
         <property name="scaledContents">
          <bool>true</bool>

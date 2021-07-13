@@ -5,6 +5,8 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle(QString("Тук-тук, кто там? Плохой нейминг"));
+    // Without BBB sound today :(
 
     facade = new Facade();
 }
@@ -20,7 +22,8 @@ void MainWindow::on_MakeReportButton_clicked()
 
 void MainWindow::on_SetSavePathButton_clicked()
 {
-    QString gotPath = QFileDialog::getExistingDirectory(this, "Выбор пути сохранения отчёта", ".");
+    QString gotPath =
+        QFileDialog::getExistingDirectory(this, "Выбор пути сохранения отчёта", ".");
     if (gotPath != "")
     {
         ui->PathStatusLabel->setText(gotPath);
@@ -28,10 +31,10 @@ void MainWindow::on_SetSavePathButton_clicked()
     }
 }
 
-
 void MainWindow::on_TableFileButton_clicked()
 {
-    QString gotFilePath = QFileDialog::getOpenFileName(this, "Выбор пути сохранения отчёта", ".", "*.xls;*.xlsx");
+    QString gotFilePath =
+        QFileDialog::getOpenFileName(this, "Выбор источника", ".", "*.xls;*.xlsx");
     if (gotFilePath != "")
     {
         ui->TableFileLabel->setText(gotFilePath);
@@ -39,3 +42,9 @@ void MainWindow::on_TableFileButton_clicked()
     }
 }
 
+void MainWindow::on_LoadNewConfigButton_clicked()
+{
+    QString gotFilePath = QFileDialog::getOpenFileName(
+        this, "Выбор конфигурационного файла", ".", "*.ycfg");
+    facade->setConfigByFile(gotFilePath);
+}
