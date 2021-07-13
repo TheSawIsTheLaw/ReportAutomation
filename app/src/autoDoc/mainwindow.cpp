@@ -20,12 +20,22 @@ void MainWindow::on_MakeReportButton_clicked()
 
 void MainWindow::on_SetSavePathButton_clicked()
 {
-    QFileDialog::getExistingDirectory(this, "Выбор пути сохранения отчёта", ".");
+    QString gotPath = QFileDialog::getExistingDirectory(this, "Выбор пути сохранения отчёта", ".");
+    if (gotPath != "")
+    {
+        ui->PathStatusLabel->setText(gotPath);
+        facade->setSavePathForConfiguration(gotPath);
+    }
 }
 
 
 void MainWindow::on_TableFileButton_clicked()
 {
-    QFileDialog::getOpenFileName(this, "Выбор пути сохранения отчёта", ".", "*.xls;*.xlsx");
+    QString gotFilePath = QFileDialog::getOpenFileName(this, "Выбор пути сохранения отчёта", ".", "*.xls;*.xlsx");
+    if (gotFilePath != "")
+    {
+        ui->TableFileLabel->setText(gotFilePath);
+        facade->setAnalyzeFile(gotFilePath);
+    }
 }
 

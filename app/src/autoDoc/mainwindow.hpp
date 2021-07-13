@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "facade.hpp"
 #include <QFileDialog>
+#include <QErrorMessage>
 
 QT_BEGIN_NAMESPACE
 namespace Ui

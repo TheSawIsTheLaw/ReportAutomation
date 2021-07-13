@@ -9,6 +9,9 @@ class Facade
 public:
     Facade();
 
+    void setSavePathForConfiguration(QString path);
+    void setAnalyzeFile(QString filePath);
+
 private:
     AutoDocConfiguration *configuration;
 };
