@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QListWidget>
+#include "excelworker.hpp"
 
 namespace Ui
 {
@@ -14,7 +15,7 @@ class OrganisationsChoiceWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit OrganisationsChoiceWindow(QWidget *parent = nullptr);
+    explicit OrganisationsChoiceWindow(QString filepath_, QWidget *parent = nullptr);
     ~OrganisationsChoiceWindow();
 
 private:
