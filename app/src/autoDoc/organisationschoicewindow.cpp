@@ -10,9 +10,8 @@ OrganisationsChoiceWindow::OrganisationsChoiceWindow(QString filepath_, QWidget 
 
     ExcelWorker excelReader;
     std::vector<QString> names = excelReader.getFirstCellsText(filepath_);
-    qDebug("%d", names.size());
     for (std::vector<QString>::iterator it = names.begin(); it != names.end(); it++)
-        ui->listOfFoundedCompanies->addItem(*it);
+        ui->listOfFoundedCompanies->addItem((*it).remove('\n'));
 }
 
 OrganisationsChoiceWindow::~OrganisationsChoiceWindow() { delete ui; }
