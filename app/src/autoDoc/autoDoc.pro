@@ -1,8 +1,9 @@
 QT       += core gui
+QT       += axcontainer
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++17
+CONFIG += c++11
 
 # More
 RC_ICONS += ..\images\icon\icon.ico
@@ -23,14 +24,16 @@ SOURCES += \
     facade.cpp \
     main.cpp \
     mainwindow.cpp \
-    organisationschoicewindow.cpp
+    organisationschoicewindow.cpp \
+    wordworker.cpp
 
 HEADERS += \
     autodocconfiguration.hpp \
     excelworker.hpp \
     facade.hpp \
     mainwindow.hpp \
-    organisationschoicewindow.hpp
+    organisationschoicewindow.hpp \
+    wordworker.hpp
 
 FORMS += \
     mainwindow.ui \

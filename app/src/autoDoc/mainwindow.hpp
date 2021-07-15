@@ -21,7 +21,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private slots:
+private Q_SLOTS:
     void on_MakeReportButton_clicked();
 
     void on_SetSavePathButton_clicked();

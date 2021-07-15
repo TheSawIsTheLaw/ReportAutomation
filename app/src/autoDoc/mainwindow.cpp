@@ -2,6 +2,7 @@
 #include "organisationschoicewindow.hpp"
 #include "ui_mainwindow.h"
 
+#include "wordworker.hpp"
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -9,6 +10,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Without BBB sound today :(
 
     facade = new Facade();
+
+    WordWorker worker;
+    worker.testCreateShit("C:/Users/dobri/Desktop/ReportAutomation/app/src/config");
 
     // test
 //    QFile file(QString("C:/Users/dobri/Downloads/exam_timetable_2020_2021_s2_all.xls"));
