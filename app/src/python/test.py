@@ -84,10 +84,10 @@ def main():
     gotArgs = sys.argv
 
     try:
-        tablePath = sys.argv[1]  # path to table to get info from
-        docSavePath = sys.argv[2]  # path to save document
-        configPath = sys.argv[3]  # path to configuration
-        workRowNumber = int(sys.argv[4])  # number of row from table
+        tablePath = gotArgs[1]  # path to table to get info from
+        docSavePath = gotArgs[2]  # path to save document
+        configPath = gotArgs[3]  # path to configuration
+        workRowNumber = int(gotArgs[4])  # number of row from table
     except:
         return 1
 
