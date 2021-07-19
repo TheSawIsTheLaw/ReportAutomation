@@ -26,7 +26,7 @@ def goToNextSharps(lines, curLineNumber):
     Function forms rules in a dictionary for the next step (excel table processing)
     
     Forms a dictionary with fields: startOfTable, headers.
-    --- startOfTable contains two ints which are coordinates of start of table (vertical and then horizontal)
+    --- startOfTable contains char and int which are coordinates of start of table (horizontal and then vertical)
     --- headers contains two strings: format of field, it's horizontal letter (coordinate in excel lol ok)
 '''
 
@@ -44,8 +44,8 @@ def getRulesFromConfig(configPath):
         throwWrongStructure()
 
     curLineNumber += 1
-    outRules["startOfTable"] = lines[curLineNumber].split(" ")
-    outRules["startOfTable"] = map(lambda curNum: int(curNum), outRules["startOfTable"])
+    outRules["startOfTable"] = lines[curLineNumber].replace("\n", "").split(" ")
+    outRules["startOfTable"][1] = int(outRules["startOfTable"][1])
 
     #    for i in outRules["startOfTable"]:
     #        print("!!{}".format(i))
@@ -77,12 +77,16 @@ def getRulesFromConfig(configPath):
 '''
 
 
-def getInfoFromExcelTableUsingRules(excelTablePath, rules):
+def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
     gotData = rules["headers"]
     workbook = load_workbook(filename = excelTablePath)
     sheets = workbook.sheetnames
     ranges = workbook[sheets[0]]
-    print(ranges['C3'].value)
+
+    positionOfNeededRow = rowNumber + rules["startOfTable"][1] - 1
+    print(ranges[rules["startOfTable"][0] + str(positionOfNeededRow)].value)
+    print(ranges[gotData[0][1] + str(positionOfNeededRow)].value)
+    # Достаём ИНН - ставим в gotData. Достаём имя столбца через startOfTable - кидаем в дату. И так далее. Только не забудь, что там нужен чек на тип столбца.
 
 
     return gotData
@@ -109,7 +113,7 @@ def main():
     #     return 1
 
     dictOfRulesForDoc = getRulesFromConfig(configPath)
-    getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc)
+    getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc, workRowNumber)
 
     return 0
 
