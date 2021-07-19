@@ -13,7 +13,7 @@ def throwWrongStructure():
     raise Exception("Конфигурационный файл не соответствует требуемому формату")
 
 
-# fTest: python test.py a a C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg a
+# fTest: python test.py a a C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
 def goToNextSharps(lines, curLineNumber):
     while curLineNumber < len(lines):
         if lines[curLineNumber][:3] == "###":
@@ -28,6 +28,7 @@ def getRulesFromConfig(configPath):
     with open(configPath, encoding = 'utf-8') as file:
         lines = file.readlines()
 
+    # Search of table start coordinates
     curLineNumber = goToNextSharps(lines, 0)
     # print(lines[curLineNumber].replace(" \n\0", ""))
     if lines[curLineNumber] != "### Область названий организаций\n":
@@ -40,6 +41,7 @@ def getRulesFromConfig(configPath):
     #    for i in outRules["startOfTable"]:
     #        print("!!{}".format(i))
 
+    # Search of headers in configFile
     curLineNumber = goToNextSharps(lines, curLineNumber)
     curLineNumber += 1
     if curLineNumber == len(lines):
@@ -70,18 +72,23 @@ def getRulesFromConfig(configPath):
 
 
 def main():
-    print()
     gotArgs = sys.argv
 
-    tablePath = sys.argv[1]  # path to table to get info from
-    docSavePath = sys.argv[2]  # path to save document
-    configPath = sys.argv[3]  # path to configuration
-    workRowNumber = sys.argv[4]  # number of row from table
+    try:
+        tablePath = sys.argv[1]  # path to table to get info from
+        docSavePath = sys.argv[2]  # path to save document
+        configPath = sys.argv[3]  # path to configuration
+        workRowNumber = int(sys.argv[4])  # number of row from table
+    except:
+        return 1
 
     dictOfRulesForDoc = getRulesFromConfig(configPath)
-    print(dictOfRulesForDoc["headers"][0][1])
 
     return 0
 
 
-main()
+ret = main()
+if not ret:
+    print("OK")
+else:
+    print("err")
