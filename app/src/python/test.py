@@ -22,6 +22,15 @@ def goToNextSharps(lines, curLineNumber):
     return -1
 
 
+'''
+    Function forms rules in a dictionary for the next step (excel table processing)
+    
+    Forms a dictionary with fields: startOfTable, headers.
+    --- startOfTable contains two ints which are coordinates of start of table (vertical and then horizontal)
+    --- headers contains two strings: format of field, it's horizontal letter (coordinate in excel lol ok)
+'''
+
+
 def getRulesFromConfig(configPath):
     outRules = dict()
 
