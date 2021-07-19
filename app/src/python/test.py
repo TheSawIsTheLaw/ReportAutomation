@@ -13,7 +13,7 @@ def throwWrongStructure():
     raise Exception("Конфигурационный файл не соответствует требуемому формату")
 
 
-# fTest: python test.py a a C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
+# fTest: python test.py "C:\Users\dobri\Desktop\Свод проектов 529.xlsx" a C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
 def goToNextSharps(lines, curLineNumber):
     while curLineNumber < len(lines):
         if lines[curLineNumber][:3] == "###":
@@ -71,6 +71,23 @@ def getRulesFromConfig(configPath):
 
 
 '''
+    Function returns information from table which it gets using rules
+    
+    Rules specification is in the function getRulesFromConfig
+'''
+
+
+def getInfoFromExcelTableUsingRules(excelTablePath, rules):
+    gotData = rules["headers"]
+    workbook = load_workbook(filename = excelTablePath)
+    sheets = workbook.sheetnames
+    ranges = workbook[sheets[0]]
+    print(ranges['C3'].value)
+
+
+    return gotData
+
+'''
     REALLY FUCKING IMPORTANT!!!
     We have a small trouble using some names with spaces. That's why
     we MUST send ways in quotes like 'C:/Go Fuck Yourself/Program Files/fuck fuck fuck fuck'
@@ -83,15 +100,16 @@ def getRulesFromConfig(configPath):
 def main():
     gotArgs = sys.argv
 
-    try:
-        tablePath = gotArgs[1]  # path to table to get info from
-        docSavePath = gotArgs[2]  # path to save document
-        configPath = gotArgs[3]  # path to configuration
-        workRowNumber = int(gotArgs[4])  # number of row from table
-    except:
-        return 1
+    # try:
+    tablePath = gotArgs[3]  # path to table to get info from
+    docSavePath = gotArgs[4]  # path to save document
+    configPath = gotArgs[5]  # path to configuration
+    workRowNumber = int(gotArgs[6])  # number of row from table
+    # except:
+    #     return 1
 
     dictOfRulesForDoc = getRulesFromConfig(configPath)
+    getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc)
 
     return 0
 
