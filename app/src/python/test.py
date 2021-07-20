@@ -1,7 +1,11 @@
 # That's a script, okey? That's why we use some fucking shitty decisions.
+import datetime
 import sys
+
+import seaborn
 from openpyxl import load_workbook
-import codecs
+from matplotlib import pyplot
+import numpy as np
 
 
 # https://stackoverflow.com/questions/55115070/next-letter-in-alphabet
@@ -79,17 +83,63 @@ def getRulesFromConfig(configPath):
 
 def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
     gotData = rules["headers"]
-    workbook = load_workbook(filename = excelTablePath)
+    # print(gotData)
+    workbook = load_workbook(filename = excelTablePath, data_only = True)
     sheets = workbook.sheetnames
     ranges = workbook[sheets[0]]
 
-    positionOfNeededRow = rowNumber + rules["startOfTable"][1] - 1
-    print(ranges[rules["startOfTable"][0] + str(positionOfNeededRow)].value)
-    print(ranges[gotData[0][1] + str(positionOfNeededRow)].value)
-    # Достаём ИНН - ставим в gotData. Достаём имя столбца через startOfTable - кидаем в дату. И так далее. Только не забудь, что там нужен чек на тип столбца.
+    headersStartIndexNumber = rules["startOfTable"][1] - 1
+    processingRowIndexNumber = rowNumber + rules["startOfTable"][1] - 1
+    # print(ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
+    # print(ranges[gotData[0][1] + str(processingRowIndexNumber)].value)
+    # print(ranges[gotData[0][1] + str(headersStartIndexNumber)].value)
 
+    i = 0
+    diagramCounter = 0
+    while i < len(gotData):
+        if gotData[i][0] == "[текст]":
+            gotData[i][0] = ranges[gotData[i][1] + str(headersStartIndexNumber)].value
+
+            gotInfo = ranges[gotData[i][1] + str(processingRowIndexNumber)].value
+            if type(gotInfo) == datetime.datetime:
+                gotInfo = "{}.{}.{}".format(gotInfo.day, gotInfo.month, gotInfo.year)
+
+            gotData[i][1] = gotInfo
+        elif gotData[i][0] == "[столбчатаядиаграмма]":
+            gotData[i][0] = "Диаграмма {}".format(diagramCounter)
+            diagramCounter += 1
+
+            # Damn.
+            namesOfColumnsInDiagram = gotData[i][1].split("-")
+            endLetter = namesOfColumnsInDiagram[1]
+            namesOfColumnsInDiagram = [namesOfColumnsInDiagram[0]]
+            curLetter = namesOfColumnsInDiagram[0]
+            while curLetter < endLetter:
+                curLetter = nextAlphabetLetter(curLetter)
+                namesOfColumnsInDiagram.append(curLetter)
+
+            groups = []
+            counts = []
+            for curColumn in namesOfColumnsInDiagram:
+                groups.append(ranges[curColumn + str(headersStartIndexNumber)].value)
+                counts.append(ranges[curColumn + str(processingRowIndexNumber)].value)
+
+            pyplot.bar(groups, counts)
+            pyplot.ticklabel_format(axis="y", scilimits = (6, 6))
+            pyplot.xlabel("Период")
+            pyplot.ylabel("Выплаты, млн. руб.")
+            pyplot.yticks(counts)
+            pyplot.grid(axis = 'y', linestyle = "-")
+            pyplot.savefig("fig{}.png".format(diagramCounter), bbox_inches = 'tight', dpi = 100)
+            print("Nope")
+
+        i += 1
+
+    print("After")
+    print(gotData)
 
     return gotData
+
 
 '''
     REALLY FUCKING IMPORTANT!!!
