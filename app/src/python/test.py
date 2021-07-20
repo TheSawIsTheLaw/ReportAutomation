@@ -1,5 +1,6 @@
 # That's a script, okey? That's why we use some fucking shitty decisions.
 import datetime
+import os
 import sys
 
 import seaborn
@@ -130,9 +131,12 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             pyplot.ylabel("Выплаты, млн. руб.")
             pyplot.yticks(counts)
             pyplot.grid(axis = 'y', linestyle = "-")
-            pyplot.savefig("fig{}.png".format(diagramCounter), bbox_inches = 'tight', dpi = 100)
-            print("Nope")
 
+            if not os.path.exists("ImagesForYcfg"):
+                os.mkdir("ImagesForYcfg")
+            imgPath = "ImagesForYcfg/figPyYcfg{}.png".format(diagramCounter)
+            pyplot.savefig(imgPath, bbox_inches = 'tight', dpi = 100)
+            gotData[i][1] = imgPath
         i += 1
 
     print("After")
