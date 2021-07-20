@@ -1,5 +1,6 @@
 # C++ + Python. NOICE
-/app/autoDoc/.idea
+/app/src/python/.idea
+/app/src/python/dist
 /app/autoDoc/__*
 *.pyproject
 
