@@ -3,6 +3,7 @@ import datetime
 import os
 import sys
 import docx
+from docx.shared import Cm
 
 from openpyxl import load_workbook
 from matplotlib import pyplot
@@ -145,6 +146,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
     return gotData
 
+### Далаем две функции, которые принимают формат. Одна делает плейн-текст, а другая - заголовки
 
 def formDocxFile(gotData, savePath):
     doc = docx.Document()
@@ -159,6 +161,8 @@ def formDocxFile(gotData, savePath):
         if currentDataPair[:8] != "Диаграмма":
             para = doc.add_paragraph("{}".format(currentDataPair[0]))
             paraFormat = para.paragraph_format
+
+            paraFormat.left_indent = Cm(1.25)
 
     doc.save(filename)
 
