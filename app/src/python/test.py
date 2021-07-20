@@ -3,7 +3,7 @@ import datetime
 import os
 import sys
 import docx
-from docx.shared import Cm
+from docx.shared import Cm, Pt
 
 from openpyxl import load_workbook
 from matplotlib import pyplot
@@ -146,7 +146,14 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
     return gotData
 
-### Далаем две функции, которые принимают формат. Одна делает плейн-текст, а другая - заголовки
+def setParaFormatHeading(format):
+    format.left_indent = Cm(1.25)
+    # Разбираемся с run
+    font = format.font
+    font.name = "Times New Roman"
+    font.size = Pt(14)
+
+
 
 def formDocxFile(gotData, savePath):
     doc = docx.Document()
@@ -162,7 +169,7 @@ def formDocxFile(gotData, savePath):
             para = doc.add_paragraph("{}".format(currentDataPair[0]))
             paraFormat = para.paragraph_format
 
-            paraFormat.left_indent = Cm(1.25)
+            setParaFormatHeading(paraFormat)
 
     doc.save(filename)
 
