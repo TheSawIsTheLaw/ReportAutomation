@@ -4,6 +4,9 @@
 /app/autoDoc/__*
 *.pyproject
 
+# mmmm, MS Office
+*.docx
+
 # C++ objects and libs
 *.slo
 *.lo

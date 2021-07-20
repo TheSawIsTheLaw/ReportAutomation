@@ -2,11 +2,10 @@
 import datetime
 import os
 import sys
+import docx
 
-import seaborn
 from openpyxl import load_workbook
 from matplotlib import pyplot
-import numpy as np
 
 
 # https://stackoverflow.com/questions/55115070/next-letter-in-alphabet
@@ -18,7 +17,7 @@ def throwWrongStructure():
     raise Exception("Конфигурационный файл не соответствует требуемому формату")
 
 
-# fTest: python test.py "C:\Users\dobri\Desktop\Свод проектов 529.xlsx" a C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
+# fTest: python test.py "C:\Users\dobri\Desktop\Свод проектов 529.xlsx" . C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
 def goToNextSharps(lines, curLineNumber):
     while curLineNumber < len(lines):
         if lines[curLineNumber][:3] == "###":
@@ -139,10 +138,31 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             gotData[i][1] = imgPath
         i += 1
 
-    print("After")
-    print(gotData)
+    gotData.insert(0, ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
+
+    # print("After")
+    # print(gotData)
 
     return gotData
+
+
+def formDocxFile(gotData, savePath):
+    doc = docx.Document()
+    filename = "Отчёт по {}".format(gotData[0])
+    for s in ['*', '.', '/', '\\', '[', ']', ':', ';', '|', ',']:
+        filename = filename.replace(s, '')
+    filename += ".docx"
+    filename = filename.replace('"', "'")
+
+    gotData.pop(0)
+    for currentDataPair in gotData:
+        if currentDataPair[:8] != "Диаграмма":
+            para = doc.add_paragraph("{}".format(currentDataPair[0]))
+            paraFormat = para.paragraph_format
+
+    doc.save(filename)
+
+    # print(gotData[0])
 
 
 '''
@@ -167,7 +187,8 @@ def main():
     #     return 1
 
     dictOfRulesForDoc = getRulesFromConfig(configPath)
-    getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc, workRowNumber)
+    gotInfo = getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc, workRowNumber)
+    formDocxFile(gotInfo, docSavePath)
 
     return 0
 
