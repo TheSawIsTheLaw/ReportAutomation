@@ -147,20 +147,16 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
     return gotData
 
-def setParaFormatHeading(format, font):
-    format.first_line_indent = Cm(1.25)
-    format.line_spacing = 1
-    format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
-    font.bold = True
-    font.name = "Times New Roman"
-    font.size = Pt(14)
-
 def setParaFormatPlainText(format, font):
     format.first_line_indent = Cm(1.25)
     format.line_spacing = 1
     format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
     font.name = "Times New Roman"
     font.size = Pt(14)
+
+def setParaFormatHeading(format, font):
+    setParaFormatPlainText(format, font)
+    font.bold = True
 
 def formDocxFile(gotData, savePath):
     doc = docx.Document()
