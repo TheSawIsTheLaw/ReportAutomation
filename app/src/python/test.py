@@ -4,6 +4,7 @@ import os
 import sys
 import docx
 from docx.shared import Cm, Pt
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
 from openpyxl import load_workbook
 from matplotlib import pyplot
@@ -146,14 +147,20 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
     return gotData
 
-def setParaFormatHeading(format):
-    format.left_indent = Cm(1.25)
-    # Разбираемся с run
-    font = format.font
+def setParaFormatHeading(format, font):
+    format.first_line_indent = Cm(1.25)
+    format.line_spacing = 1
+    format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+    font.bold = True
     font.name = "Times New Roman"
     font.size = Pt(14)
 
-
+def setParaFormatPlainText(format, font):
+    format.first_line_indent = Cm(1.25)
+    format.line_spacing = 1
+    format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
+    font.name = "Times New Roman"
+    font.size = Pt(14)
 
 def formDocxFile(gotData, savePath):
     doc = docx.Document()
@@ -165,11 +172,13 @@ def formDocxFile(gotData, savePath):
 
     gotData.pop(0)
     for currentDataPair in gotData:
-        if currentDataPair[:8] != "Диаграмма":
-            para = doc.add_paragraph("{}".format(currentDataPair[0]))
-            paraFormat = para.paragraph_format
+        if currentDataPair[0][:9] != "Диаграмма":
+            headerPara = doc.add_paragraph()
+            setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
 
-            setParaFormatHeading(paraFormat)
+            plainTextPara = doc.add_paragraph()
+            setParaFormatPlainText(plainTextPara.paragraph_format, plainTextPara.add_run("{}".format(currentDataPair[1].replace("\n", " "))).font)
+
 
     doc.save(filename)
 
