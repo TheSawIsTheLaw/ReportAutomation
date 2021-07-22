@@ -64,12 +64,11 @@ def getRulesFromConfig(configPath):
 
     headersInDocument = []
     curHeaderDescription = lines[curLineNumber]
-    while curLineNumber < len(lines) - 1 and curHeaderDescription[0] == "[":
-        curHeaderDescription = curHeaderDescription.replace("\n", "").split(" ")
+    while curLineNumber < len(lines) and curHeaderDescription[0][0] == "[":
+        curHeaderDescription = lines[curLineNumber].replace("\n", "").split(" ")
+        # print(curHeaderDescription)
         headersInDocument.append(curHeaderDescription)
-
         curLineNumber += 1
-        curHeaderDescription = lines[curLineNumber]
 
     outRules["headers"] = headersInDocument
 
@@ -108,7 +107,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
             gotData[i][1] = gotInfo
         elif gotData[i][0] == "[столбчатаядиаграмма]":
-            gotData[i][0] = "Диаграмма {}".format(diagramCounter)
+            gotData[i][0] = "Диаграмма по выплатам {}".format(diagramCounter)
             diagramCounter += 1
 
             # Damn.
@@ -126,8 +125,11 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
                 groups.append(ranges[curColumn + str(headersStartIndexNumber)].value)
                 counts.append(ranges[curColumn + str(processingRowIndexNumber)].value)
 
-            pyplot.bar(groups, counts)
-            pyplot.ticklabel_format(axis="y", scilimits = (6, 6))
+            # TODO To separated function
+            pyplot.bar(groups, counts,
+                       color = ['paleturquoise', 'aquamarine', 'mediumspringgreen', 'mediumseagreen', 'green',
+                                'darkgreen'])
+            pyplot.ticklabel_format(axis = "y", scilimits = (6, 6))
             pyplot.xlabel("Период")
             pyplot.ylabel("Выплаты, млн. руб.")
             pyplot.yticks(counts)
@@ -147,6 +149,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
     return gotData
 
+
 def setParaFormatPlainText(format, font):
     format.first_line_indent = Cm(1.25)
     format.line_spacing = 1
@@ -154,9 +157,24 @@ def setParaFormatPlainText(format, font):
     font.name = "Times New Roman"
     font.size = Pt(14)
 
+
 def setParaFormatHeading(format, font):
     setParaFormatPlainText(format, font)
     font.bold = True
+
+
+def setParaFormatTitle(format, font):
+    format.line_spacing = 1
+    format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    font.name = "Times New Roman"
+    font.bold = True
+    font.size = Pt(16)
+
+
+def setPictureFormat(format, run, picPath):
+    format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    run.add_picture(picPath, width = Cm(10))
+
 
 def formDocxFile(gotData, savePath):
     doc = docx.Document()
@@ -165,20 +183,29 @@ def formDocxFile(gotData, savePath):
         filename = filename.replace(s, '')
     filename += ".docx"
     filename = filename.replace('"', "'")
+    filename = savePath + "/" + filename
 
+    titlePara = doc.add_paragraph()
+    setParaFormatTitle(titlePara.paragraph_format,
+                       titlePara.add_run("Аналитический отчёт по комплексному проекту {}".format(gotData[0])).font)
     gotData.pop(0)
+    print(gotData)
     for currentDataPair in gotData:
-        if currentDataPair[0][:9] != "Диаграмма":
+        if currentDataPair[0][:9] == "Диаграмма":
+            headerPara = doc.add_paragraph()
+            setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
+
+            picturePara = doc.add_paragraph()
+            setPictureFormat(picturePara.paragraph_format, picturePara.add_run(), currentDataPair[1])
+        else:
             headerPara = doc.add_paragraph()
             setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
 
             plainTextPara = doc.add_paragraph()
-            setParaFormatPlainText(plainTextPara.paragraph_format, plainTextPara.add_run("{}".format(currentDataPair[1].replace("\n", " "))).font)
-
+            setParaFormatPlainText(plainTextPara.paragraph_format,
+                                   plainTextPara.add_run("{}".format(currentDataPair[1].replace("\n", " "))).font)
 
     doc.save(filename)
-
-    # print(gotData[0])
 
 
 '''
