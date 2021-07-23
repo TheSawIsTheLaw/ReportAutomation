@@ -6,13 +6,10 @@ import docx
 from docx.shared import Cm, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 
+from openpyxl.utils import get_column_letter
+from openpyxl.utils.cell import column_index_from_string
 from openpyxl import load_workbook
 from matplotlib import pyplot
-
-
-# https://stackoverflow.com/questions/55115070/next-letter-in-alphabet
-def nextAlphabetLetter(s):
-    return chr((ord(s.upper()) + 1 - 65) % 26 + 65)
 
 
 def throwWrongStructure():
@@ -115,9 +112,12 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             endLetter = namesOfColumnsInDiagram[1]
             namesOfColumnsInDiagram = [namesOfColumnsInDiagram[0]]
             curLetter = namesOfColumnsInDiagram[0]
-            while curLetter < endLetter:
-                curLetter = nextAlphabetLetter(curLetter)
-                namesOfColumnsInDiagram.append(curLetter)
+            print(endLetter)
+            curLetter = column_index_from_string(curLetter)
+            print(curLetter, column_index_from_string(endLetter))
+            while curLetter < column_index_from_string(endLetter):
+                curLetter += 1
+                namesOfColumnsInDiagram.append(get_column_letter(curLetter))
 
             groups = []
             counts = []
@@ -140,6 +140,12 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             imgPath = "ImagesForYcfg/figPyYcfg{}.png".format(diagramCounter)
             pyplot.savefig(imgPath, bbox_inches = 'tight', dpi = 100)
             gotData[i][1] = imgPath
+        elif gotData[i][0] == "[карта]":
+            gotData[i][0] = "Карта региона"
+
+            gotInfo = ranges[gotData[i][1] + str(processingRowIndexNumber)].value
+            gotData[i][1] = "SubjectsOfRF/{}.png".format(gotInfo)
+
         i += 1
 
     gotData.insert(0, ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
@@ -173,7 +179,7 @@ def setParaFormatTitle(format, font):
 
 def setPictureFormat(format, run, picPath):
     format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-    run.add_picture(picPath, width = Cm(10))
+    run.add_picture(picPath, width = Cm(12))
 
 
 def formDocxFile(gotData, savePath):
@@ -189,21 +195,25 @@ def formDocxFile(gotData, savePath):
     setParaFormatTitle(titlePara.paragraph_format,
                        titlePara.add_run("Аналитический отчёт по комплексному проекту {}".format(gotData[0])).font)
     gotData.pop(0)
-    print(gotData)
+    # print(gotData)
     for currentDataPair in gotData:
-        if currentDataPair[0][:9] == "Диаграмма":
+        if currentDataPair[0][:9] == "Диаграмма" or currentDataPair[0][:5] == "Карта":
             headerPara = doc.add_paragraph()
             setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
 
             picturePara = doc.add_paragraph()
             setPictureFormat(picturePara.paragraph_format, picturePara.add_run(), currentDataPair[1])
+        elif currentDataPair[0][:4] == "Дата":
+            headerPara = doc.add_paragraph()
+            setParaFormatHeading(headerPara.paragraph_format,
+                                 headerPara.add_run("{}:{}".format(currentDataPair[0], currentDataPair[1])).font)
         else:
             headerPara = doc.add_paragraph()
             setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
 
             plainTextPara = doc.add_paragraph()
             setParaFormatPlainText(plainTextPara.paragraph_format,
-                                   plainTextPara.add_run("{}".format(currentDataPair[1].replace("\n", " "))).font)
+                                   plainTextPara.add_run("{}".format(str(currentDataPair[1]).replace("\n", " "))).font)
 
     doc.save(filename)
 
