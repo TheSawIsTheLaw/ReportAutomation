@@ -72,6 +72,21 @@ def getRulesFromConfig(configPath):
     return outRules
 
 
+def createBarAndSave(groups, counts, savePath):
+    pyplot.bar(groups, counts,
+               color = ['paleturquoise', 'aquamarine', 'mediumspringgreen', 'mediumseagreen', 'green',
+                        'darkgreen'])
+    pyplot.ticklabel_format(axis = "y", scilimits = (6, 6))
+    pyplot.xlabel("Период")
+    pyplot.ylabel("Выплаты, млн. руб.")
+    pyplot.yticks(counts)
+    pyplot.grid(axis = 'y', linestyle = "-")
+
+    if not os.path.exists("ImagesForYcfg"):
+        os.mkdir("ImagesForYcfg")
+    pyplot.savefig(savePath, bbox_inches = 'tight', dpi = 100)
+
+
 '''
     Function returns information from table which it gets using rules
     
@@ -96,13 +111,29 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
     diagramCounter = 0
     while i < len(gotData):
         if gotData[i][0] == "[текст]":
-            gotData[i][0] = ranges[gotData[i][1] + str(headersStartIndexNumber)].value
+            if "-" in gotData[i][1]:
+                colRange = gotData[i][1].split("-")
+                curCol = column_index_from_string(colRange[0])
+                endCol = column_index_from_string(colRange[1])
+                gotData.pop(i)
+                while curCol <= endCol:
+                    gotHeader = ranges[get_column_letter(curCol) + str(headersStartIndexNumber)].value
+                    gotInfo = ranges[get_column_letter(curCol) + str(processingRowIndexNumber)].value
+                    if type(gotInfo) == datetime.datetime:
+                        gotInfo = "{}.{}.{}".format(gotInfo.day, gotInfo.month, gotInfo.year)
+                    gotData.insert(i, [gotHeader, gotInfo])
 
-            gotInfo = ranges[gotData[i][1] + str(processingRowIndexNumber)].value
-            if type(gotInfo) == datetime.datetime:
-                gotInfo = "{}.{}.{}".format(gotInfo.day, gotInfo.month, gotInfo.year)
+                    curCol += 1
+                    i += 1
+                i -= 1
+            else:
+                gotData[i][0] = ranges[gotData[i][1] + str(headersStartIndexNumber)].value
 
-            gotData[i][1] = gotInfo
+                gotInfo = ranges[gotData[i][1] + str(processingRowIndexNumber)].value
+                if type(gotInfo) == datetime.datetime:
+                    gotInfo = "{}.{}.{}".format(gotInfo.day, gotInfo.month, gotInfo.year)
+
+                gotData[i][1] = gotInfo
         elif gotData[i][0] == "[столбчатаядиаграмма]":
             gotData[i][0] = "Диаграмма по выплатам {}".format(diagramCounter)
             diagramCounter += 1
@@ -112,9 +143,9 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             endLetter = namesOfColumnsInDiagram[1]
             namesOfColumnsInDiagram = [namesOfColumnsInDiagram[0]]
             curLetter = namesOfColumnsInDiagram[0]
-            print(endLetter)
+            # print(endLetter)
             curLetter = column_index_from_string(curLetter)
-            print(curLetter, column_index_from_string(endLetter))
+            # print(curLetter, column_index_from_string(endLetter))
             while curLetter < column_index_from_string(endLetter):
                 curLetter += 1
                 namesOfColumnsInDiagram.append(get_column_letter(curLetter))
@@ -125,28 +156,18 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
                 groups.append(ranges[curColumn + str(headersStartIndexNumber)].value)
                 counts.append(ranges[curColumn + str(processingRowIndexNumber)].value)
 
-            # TODO To separated function
-            pyplot.bar(groups, counts,
-                       color = ['paleturquoise', 'aquamarine', 'mediumspringgreen', 'mediumseagreen', 'green',
-                                'darkgreen'])
-            pyplot.ticklabel_format(axis = "y", scilimits = (6, 6))
-            pyplot.xlabel("Период")
-            pyplot.ylabel("Выплаты, млн. руб.")
-            pyplot.yticks(counts)
-            pyplot.grid(axis = 'y', linestyle = "-")
-
-            if not os.path.exists("ImagesForYcfg"):
-                os.mkdir("ImagesForYcfg")
             imgPath = "ImagesForYcfg/figPyYcfg{}.png".format(diagramCounter)
-            pyplot.savefig(imgPath, bbox_inches = 'tight', dpi = 100)
+            createBarAndSave(groups, counts, imgPath)
+
             gotData[i][1] = imgPath
         elif gotData[i][0] == "[карта]":
-            gotData[i][0] = "Карта региона"
+            gotData[i][0] = ranges[gotData[i][1] + str(headersStartIndexNumber)].value
 
             gotInfo = ranges[gotData[i][1] + str(processingRowIndexNumber)].value
             gotData[i][1] = "SubjectsOfRF/{}.png".format(gotInfo)
 
         i += 1
+    print(gotData)
 
     gotData.insert(0, ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
 
@@ -197,7 +218,8 @@ def formDocxFile(gotData, savePath):
     gotData.pop(0)
     # print(gotData)
     for currentDataPair in gotData:
-        if currentDataPair[0][:9] == "Диаграмма" or currentDataPair[0][:5] == "Карта":
+        # Oh Satan...
+        if str(currentDataPair[1])[:13] == "ImagesForYcfg" or str(currentDataPair[1])[:12] == "SubjectsOfRF":
             headerPara = doc.add_paragraph()
             setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
 
@@ -206,7 +228,7 @@ def formDocxFile(gotData, savePath):
         elif currentDataPair[0][:4] == "Дата":
             headerPara = doc.add_paragraph()
             setParaFormatHeading(headerPara.paragraph_format,
-                                 headerPara.add_run("{}:{}".format(currentDataPair[0], currentDataPair[1])).font)
+                                 headerPara.add_run("{}: {}".format(currentDataPair[0], currentDataPair[1])).font)
         else:
             headerPara = doc.add_paragraph()
             setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
