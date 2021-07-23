@@ -11,6 +11,8 @@ from openpyxl.utils.cell import column_index_from_string
 from openpyxl import load_workbook
 from matplotlib import pyplot
 
+from RGConstants import *
+
 
 def throwWrongStructure():
     raise Exception("Конфигурационный файл не соответствует требуемому формату")
@@ -156,7 +158,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
                 groups.append(ranges[curColumn + str(headersStartIndexNumber)].value)
                 counts.append(ranges[curColumn + str(processingRowIndexNumber)].value)
 
-            imgPath = "ImagesForYcfg/figPyYcfg{}.png".format(diagramCounter)
+            imgPath = "{}/figPyYcfg{}.png".format(PATH_TO_PYPLOT_IMAGES, diagramCounter)
             createBarAndSave(groups, counts, imgPath)
 
             gotData[i][1] = imgPath
@@ -164,7 +166,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             gotData[i][0] = ranges[gotData[i][1] + str(headersStartIndexNumber)].value
 
             gotInfo = ranges[gotData[i][1] + str(processingRowIndexNumber)].value
-            gotData[i][1] = "SubjectsOfRF/{}.png".format(gotInfo)
+            gotData[i][1] = "{}/{}.png".format(PATH_TO_SUBJECTS, gotInfo)
 
         i += 1
     print(gotData)
@@ -212,6 +214,9 @@ def formDocxFile(gotData, savePath):
     filename = filename.replace('"', "'")
     filename = savePath + "/" + filename
 
+    titleImage = doc.add_paragraph()
+    setPictureFormat(titleImage.paragraph_format, titleImage.add_run(), PATH_TO_MPT_LOGO)
+
     titlePara = doc.add_paragraph()
     setParaFormatTitle(titlePara.paragraph_format,
                        titlePara.add_run("Аналитический отчёт по комплексному проекту {}".format(gotData[0])).font)
@@ -219,7 +224,7 @@ def formDocxFile(gotData, savePath):
     # print(gotData)
     for currentDataPair in gotData:
         # Oh Satan...
-        if str(currentDataPair[1])[:13] == "ImagesForYcfg" or str(currentDataPair[1])[:12] == "SubjectsOfRF":
+        if PATH_TO_PYPLOT_IMAGES in str(currentDataPair[1]) or PATH_TO_SUBJECTS in str(currentDataPair[1]):
             headerPara = doc.add_paragraph()
             setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
 
