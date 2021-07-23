@@ -137,7 +137,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
                 gotData[i][1] = gotInfo
         elif gotData[i][0] == "[столбчатаядиаграмма]":
-            gotData[i][0] = "Диаграмма по выплатам {}".format(diagramCounter)
+            gotData[i][0] = "Диаграмма по выплатам"
             diagramCounter += 1
 
             # Damn.
@@ -169,7 +169,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             gotData[i][1] = "{}/{}.png".format(PATH_TO_SUBJECTS, gotInfo)
 
         i += 1
-    print(gotData)
+    # print(gotData)
 
     gotData.insert(0, ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
 
@@ -242,7 +242,11 @@ def formDocxFile(gotData, savePath):
             setParaFormatPlainText(plainTextPara.paragraph_format,
                                    plainTextPara.add_run("{}".format(str(currentDataPair[1]).replace("\n", " "))).font)
 
-    doc.save(filename)
+    try:
+        doc.save(filename)
+    except Exception:
+        return PERMISSION_ERROR
+    return 0
 
 
 '''
@@ -258,23 +262,18 @@ def formDocxFile(gotData, savePath):
 def main():
     gotArgs = sys.argv
 
-    # try:
-    tablePath = gotArgs[3]  # path to table to get info from
-    docSavePath = gotArgs[4]  # path to save document
-    configPath = gotArgs[5]  # path to configuration
-    workRowNumber = int(gotArgs[6])  # number of row from table
-    # except:
-    #     return 1
+    try:
+        tablePath = gotArgs[3]  # path to table to get info from
+        docSavePath = gotArgs[4]  # path to save document
+        configPath = gotArgs[5]  # path to configuration
+        workRowNumber = int(gotArgs[6])  # number of row from table
+    except Exception:
+        return INVALID_ARGUMENTS_ERROR
 
     dictOfRulesForDoc = getRulesFromConfig(configPath)
     gotInfo = getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc, workRowNumber)
-    formDocxFile(gotInfo, docSavePath)
 
-    return 0
+    return formDocxFile(gotInfo, docSavePath)
 
 
-ret = main()
-if not ret:
-    print("OK")
-else:
-    print("err")
+sys.exit(main())
