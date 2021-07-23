@@ -18,7 +18,7 @@ def throwWrongStructure():
     raise Exception("Конфигурационный файл не соответствует требуемому формату")
 
 
-# fTest: python test.py "C:\Users\dobri\Desktop\Свод проектов 529.xlsx" . C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
+# fTest: python reportGenerator.py "C:\Users\dobri\Desktop\Свод проектов 529.xlsx" . C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
 def goToNextSharps(lines, curLineNumber):
     while curLineNumber < len(lines):
         if lines[curLineNumber][:3] == "###":
