@@ -45,6 +45,4 @@ void OrganisationsChoiceWindow::on_buttonsGroup_accepted()
                              "попытку ещё раз.", items.at(i)->text());
         }
     }
-
-    if (exitCode) {}
 }
