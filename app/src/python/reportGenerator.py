@@ -5,6 +5,7 @@ import sys
 import docx
 from docx.shared import Cm, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from urllib.parse import unquote
 
 from openpyxl.utils import get_column_letter
 from openpyxl.utils.cell import column_index_from_string
@@ -273,12 +274,17 @@ def main():
     gotArgs = sys.argv
 
     try:
-        tablePath = gotArgs[3]  # path to table to get info from
-        docSavePath = gotArgs[4]  # path to save document
-        configPath = gotArgs[5]  # path to configuration
-        workRowNumber = int(gotArgs[6])  # number of row from table
+        tablePath = gotArgs[1]  # path to table to get info from
+        print(tablePath)
+        docSavePath = gotArgs[2]  # path to save document
+        print(docSavePath)
+        configPath = gotArgs[3]  # path to configuration
+        print(configPath)
+        workRowNumber = int(gotArgs[4])  # number of row from table
+        print(workRowNumber)
     except Exception:
         return INVALID_ARGUMENTS_ERROR
+    print("ПИЗДА ЕБАНАЯ РАБОТАЙ БЛЯДЬ")
 
     dictOfRulesForDoc = getRulesFromConfig(configPath)
     gotInfo = getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc, workRowNumber)
