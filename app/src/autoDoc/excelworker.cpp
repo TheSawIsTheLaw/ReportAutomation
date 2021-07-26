@@ -13,14 +13,17 @@ std::vector<QString> ExcelWorker::getFirstCellsText(QString filepath, QString st
     if (!excelDoc.load())
         return outVec;
 
-    int currentRow = 3;
-    QString curName = excelDoc.read(currentRow, 3).toString();
-    qDebug("Is start cell NULL? %s", filepath.toStdString().c_str());
+    QStringList separatedStartPosition = startPosition.split(" ");
+    int currentRow = separatedStartPosition[1].toInt();
+    qDebug("%d", currentRow);
+
+    QString curName = excelDoc.read(startPosition.replace(" ", "")).toString();
+//    qDebug("Is start cell NULL? %s", filepath.toStdString().c_str());
     while (curName != "")
     {
         outVec.push_back(curName);
         currentRow++;
-        curName = excelDoc.read(currentRow, 3).toString();
+        curName = excelDoc.read(separatedStartPosition[0] + QString::number(currentRow)).toString();
     }
 
     return outVec;

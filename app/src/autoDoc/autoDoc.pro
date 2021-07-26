@@ -25,15 +25,16 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     organisationschoicewindow.cpp \
-    wordworker.cpp
+    reportcreator.cpp
 
 HEADERS += \
     autodocconfiguration.hpp \
+    constants.hpp \
     excelworker.hpp \
     facade.hpp \
     mainwindow.hpp \
     organisationschoicewindow.hpp \
-    wordworker.hpp
+    reportcreator.hpp
 
 FORMS += \
     mainwindow.ui \

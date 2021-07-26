@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <vector>
+#include "constants.hpp"
 
 class AutoDocConfiguration
 {
@@ -12,6 +13,7 @@ public:
     QString savePath = "";
     QString readFilePath = "";
     QString startCell = "";
+    QString configPath = PATH_TO_CONF;
 
     std::vector<QString> vectorOfNeededHeaders;
 };

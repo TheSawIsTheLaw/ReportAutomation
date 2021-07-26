@@ -3,7 +3,10 @@
 
 #include <QDialog>
 #include <QListWidget>
+#include <QErrorMessage>
+#include "reportcreator.hpp"
 #include "excelworker.hpp"
+#include "autodocconfiguration.hpp"
 
 namespace Ui
 {
@@ -15,11 +18,15 @@ class OrganisationsChoiceWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit OrganisationsChoiceWindow(QString filepath_, QString startCell, QWidget *parent = nullptr);
+    explicit OrganisationsChoiceWindow(AutoDocConfiguration &conf, QWidget *parent = nullptr);
     ~OrganisationsChoiceWindow();
+
+private slots:
+    void on_buttonsGroup_accepted();
 
 private:
     Ui::OrganisationsChoiceWindow *ui;
+    AutoDocConfiguration configuration;
 };
 
 #endif // ORGANISATIONSCHOICEWINDOW_HPP

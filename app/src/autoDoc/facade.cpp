@@ -15,9 +15,7 @@ Facade::Facade()
              getline(conf, line), checkSubstr = line.substr(0, 3))
         {}
 
-        QString startCell = QString::fromStdString(line);
-        startCell.replace(" ", "");
-        std::cout << startCell.toStdString();
+        configuration->startCell = QString::fromStdString(line);
     }
 }
 
@@ -47,6 +45,7 @@ void Facade::initChoiceOfOrgs(QWidget *parent)
     if (configuration->readFilePath == "" || configuration->startCell == "" ||
         configuration->savePath == "")
     {
+        qDebug("%s %s %s", configuration->readFilePath.toStdString().c_str(), configuration->startCell.toStdString().c_str(), configuration->savePath.toStdString().c_str());
         QErrorMessage *errorWin = new QErrorMessage();
         errorWin->setWindowTitle("Ошибка");
         errorWin->showMessage("Не заданы параметры для выполнения работы.");
@@ -54,8 +53,14 @@ void Facade::initChoiceOfOrgs(QWidget *parent)
     }
 
     OrganisationsChoiceWindow orgChoiceWin(
-        configuration->readFilePath, configuration->startCell, parent);
+        *configuration, parent);
 
     orgChoiceWin.setModal(true);
     orgChoiceWin.exec();
+}
+
+int Facade::generateReport(int row)
+{
+    ReportCreator creator(configuration->readFilePath, configuration->savePath, configuration->configPath, row);
+    return creator.startProc();
 }

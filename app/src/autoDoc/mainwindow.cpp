@@ -2,7 +2,7 @@
 #include "organisationschoicewindow.hpp"
 #include "ui_mainwindow.h"
 
-#include "wordworker.hpp"
+#include "reportcreator.hpp"
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
