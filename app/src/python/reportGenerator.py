@@ -12,6 +12,7 @@ from openpyxl import load_workbook
 from matplotlib import pyplot
 
 from RGConstants import *
+from floatingImage import add_float_picture
 
 
 def throwWrongStructure():
@@ -215,7 +216,7 @@ def formDocxFile(gotData, savePath):
     filename = savePath + "/" + filename
 
     titleImage = doc.add_paragraph()
-    setPictureFormat(titleImage.paragraph_format, titleImage.add_run(), PATH_TO_MPT_LOGO)
+    add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(465), Pt(10))
 
     titlePara = doc.add_paragraph()
     setParaFormatTitle(titlePara.paragraph_format,
@@ -263,10 +264,10 @@ def main():
     gotArgs = sys.argv
 
     try:
-        tablePath = gotArgs[1]  # path to table to get info from
-        docSavePath = gotArgs[2]  # path to save document
-        configPath = gotArgs[3]  # path to configuration
-        workRowNumber = int(gotArgs[4])  # number of row from table
+        tablePath = gotArgs[3]  # path to table to get info from
+        docSavePath = gotArgs[4]  # path to save document
+        configPath = gotArgs[5]  # path to configuration
+        workRowNumber = int(gotArgs[6])  # number of row from table
     except Exception:
         return INVALID_ARGUMENTS_ERROR
 
