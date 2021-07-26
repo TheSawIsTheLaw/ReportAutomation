@@ -217,6 +217,8 @@ def formDocxFile(gotData, savePath):
 
     titleImage = doc.add_paragraph()
     add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(465), Pt(10))
+    add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(10), Pt(10)) # Добавляем только в том случае, если
+    # по имени файла не можем найти лого компании и по кайфу
 
     titlePara = doc.add_paragraph()
     setParaFormatTitle(titlePara.paragraph_format,
