@@ -13,7 +13,7 @@ int ReportCreator::startProc()
 {
     QProcess *creatorProc = new QProcess();
     creatorProc->start("./reportCreator.exe",
-                       QStringList() << analyzeFile << savePath << configPath << QString::number(row));
+        QStringList() << analyzeFile << savePath << configPath << QString::number(row));
     creatorProc->waitForFinished();
     return creatorProc->exitCode();
 }

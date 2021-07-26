@@ -10,26 +10,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     // Without BBB sound today :(
 
     facade = new Facade();
-
-    // test
-//    QFile file(QString("C:/Users/dobri/Downloads/exam_timetable_2020_2021_s2_all.xls"));
-//    bool isOpen = file.open(QIODevice::ReadOnly | QIODevice::Text);
-//    if (isOpen)
-//        qDebug("Opened!");
-//    else
-//        qDebug("Fuck");
-//    while (!file.atEnd())
-//        qDebug("%s", file.readLine().toStdString().c_str());
-//    file.close();
-    // end
 }
 
 MainWindow::~MainWindow() { delete ui; }
 
-void MainWindow::on_MakeReportButton_clicked()
-{
-    facade->initChoiceOfOrgs(this);
-}
+void MainWindow::on_MakeReportButton_clicked() { facade->initChoiceOfOrgs(this); }
 
 void MainWindow::on_SetSavePathButton_clicked()
 {

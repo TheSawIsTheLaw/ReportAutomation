@@ -1,12 +1,12 @@
 #ifndef ORGANISATIONSCHOICEWINDOW_HPP
 #define ORGANISATIONSCHOICEWINDOW_HPP
 
-#include <QDialog>
-#include <QListWidget>
-#include <QErrorMessage>
-#include "reportcreator.hpp"
-#include "excelworker.hpp"
 #include "autodocconfiguration.hpp"
+#include "excelworker.hpp"
+#include "reportcreator.hpp"
+#include <QDialog>
+#include <QErrorMessage>
+#include <QListWidget>
 
 namespace Ui
 {
@@ -18,7 +18,8 @@ class OrganisationsChoiceWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit OrganisationsChoiceWindow(AutoDocConfiguration &conf, QWidget *parent = nullptr);
+    explicit OrganisationsChoiceWindow(
+        AutoDocConfiguration &conf, QWidget *parent = nullptr);
     ~OrganisationsChoiceWindow();
 
 private slots:

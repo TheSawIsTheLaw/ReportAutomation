@@ -1,11 +1,9 @@
 #include "excelworker.hpp"
 
-ExcelWorker::ExcelWorker()
-{
+ExcelWorker::ExcelWorker() {}
 
-}
-
-std::vector<QString> ExcelWorker::getFirstCellsText(QString filepath, QString startPosition)
+std::vector<QString> ExcelWorker::getFirstCellsText(
+    QString filepath, QString startPosition)
 {
     std::vector<QString> outVec;
 
@@ -15,15 +13,16 @@ std::vector<QString> ExcelWorker::getFirstCellsText(QString filepath, QString st
 
     QStringList separatedStartPosition = startPosition.split(" ");
     int currentRow = separatedStartPosition[1].toInt();
-    qDebug("%d", currentRow);
+    //    qDebug("%d", currentRow);
 
     QString curName = excelDoc.read(startPosition.replace(" ", "")).toString();
-//    qDebug("Is start cell NULL? %s", filepath.toStdString().c_str());
+    //    qDebug("Is start cell NULL? %s", filepath.toStdString().c_str());
     while (curName != "")
     {
         outVec.push_back(curName);
         currentRow++;
-        curName = excelDoc.read(separatedStartPosition[0] + QString::number(currentRow)).toString();
+        curName = excelDoc.read(separatedStartPosition[0] + QString::number(currentRow))
+                      .toString();
     }
 
     return outVec;

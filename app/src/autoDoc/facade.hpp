@@ -8,12 +8,14 @@
 
 #include <QErrorMessage>
 
-#include "xlsxdocument.h"
-#include "xlsxchartsheet.h"
 #include "xlsxcellrange.h"
 #include "xlsxchart.h"
+#include "xlsxchartsheet.h"
+#include "xlsxdocument.h"
 #include "xlsxrichstring.h"
 #include "xlsxworkbook.h"
+
+#include <fstream>
 
 #include "constants.hpp"
 

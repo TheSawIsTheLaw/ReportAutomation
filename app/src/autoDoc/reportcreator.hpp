@@ -1,8 +1,8 @@
 #ifndef REPORTCREATOR_H
 #define REPORTCREATOR_H
 
-#include <QString>
 #include <QProcess>
+#include <QString>
 
 class ReportCreator
 {

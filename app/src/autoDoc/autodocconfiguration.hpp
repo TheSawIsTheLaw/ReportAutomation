@@ -1,14 +1,16 @@
 #ifndef AUTODOCCONFIGURATION_HPP
 #define AUTODOCCONFIGURATION_HPP
 
+#include "constants.hpp"
 #include <QString>
 #include <vector>
-#include "constants.hpp"
 
 class AutoDocConfiguration
 {
 public:
     AutoDocConfiguration();
+    AutoDocConfiguration(QString savePath_, QString readFilePath_, QString startCell_,
+        QString configPath_);
 
     QString savePath = "";
     QString readFilePath = "";

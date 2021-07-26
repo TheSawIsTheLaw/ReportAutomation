@@ -1,10 +1,10 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QMainWindow>
 #include "facade.hpp"
-#include <QFileDialog>
 #include <QErrorMessage>
+#include <QFileDialog>
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
