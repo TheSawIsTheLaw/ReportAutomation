@@ -3,6 +3,9 @@
 /app/src/python/dist
 /app/autoDoc/__*
 *.pyproject
+/app/src/python/build
+/app/src/python/__pycache__
+app/src/python/ImagesForYcfg/
 
 # mmmm, MS Office
 *.docx

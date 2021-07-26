@@ -263,10 +263,14 @@ def main():
     gotArgs = sys.argv
 
     try:
-        tablePath = gotArgs[3]  # path to table to get info from
-        docSavePath = gotArgs[4]  # path to save document
-        configPath = gotArgs[5]  # path to configuration
-        workRowNumber = int(gotArgs[6])  # number of row from table
+        tablePath = gotArgs[1]  # path to table to get info from
+        print(tablePath)
+        docSavePath = gotArgs[2]  # path to save document
+        print(tablePath, docSavePath)
+        configPath = gotArgs[3]  # path to configuration
+        print(tablePath, docSavePath, configPath)
+        workRowNumber = int(gotArgs[4])  # number of row from table
+        print(tablePath, docSavePath, configPath, workRowNumber)
     except Exception:
         return INVALID_ARGUMENTS_ERROR
 
