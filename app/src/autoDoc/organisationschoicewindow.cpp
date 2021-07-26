@@ -26,15 +26,25 @@ void OrganisationsChoiceWindow::on_buttonsGroup_accepted()
     int startRow = configuration.startCell.split(" ")[1].toInt();
     int exitCode = 0;
     for (int i = 0; i < items.size() && !exitCode; i++)
+    {
         exitCode = ReportCreator(configuration.readFilePath, configuration.savePath,
             configuration.configPath, startRow + i)
                        .startProc();
-
-    if (exitCode)
-    {
-        QErrorMessage *err = new QErrorMessage(this);
-        err->setWindowTitle("Ошибка");
-        err->showMessage("Произошла ошибка во время обработки таблицы.\nПроверьте "
-                         "целостность конфигурационного файла или таблицы.");
+        if (exitCode == 1)
+        {
+            QErrorMessage *err = new QErrorMessage(this);
+            err->setWindowTitle("Ошибка");
+            err->showMessage("Произошла ошибка во время обработки таблицы.\nПроверьте "
+                             "целостность конфигурационного файла или таблицы.");
+        }
+        else if (exitCode == 2)
+        {
+            QErrorMessage *err = new QErrorMessage(this);
+            err->setWindowFilePath("Ошибка");
+            err->showMessage("Файл не доступен для записи (%s). Закройте документ и повторите "
+                             "попытку ещё раз.", items.at(i)->text());
+        }
     }
+
+    if (exitCode) {}
 }
