@@ -3,7 +3,10 @@
 
 #include "autodocconfiguration.hpp"
 #include <filesystem>
+#include <fstream>
 #include <organisationschoicewindow.hpp>
+
+#include <QErrorMessage>
 
 #include "xlsxdocument.h"
 #include "xlsxchartsheet.h"
@@ -14,6 +17,8 @@
 
 #define SUCCESS 0
 #define FILE_NOT_EXIST_ERR 1
+
+#define PATH_TO_CONF "../../src/config/stdConfig.ycfg"
 
 // Legendary Facade. RIP CGCoursework.
 class Facade

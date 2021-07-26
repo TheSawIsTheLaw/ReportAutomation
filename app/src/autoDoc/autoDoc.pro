@@ -3,7 +3,7 @@ QT       += axcontainer
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # More
 RC_ICONS += ..\images\icon\icon.ico

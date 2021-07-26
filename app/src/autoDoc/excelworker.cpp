@@ -5,7 +5,7 @@ ExcelWorker::ExcelWorker()
 
 }
 
-std::vector<QString> ExcelWorker::getFirstCellsText(QString filepath)
+std::vector<QString> ExcelWorker::getFirstCellsText(QString filepath, QString startPosition)
 {
     std::vector<QString> outVec;
 

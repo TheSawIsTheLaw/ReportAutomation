@@ -15,7 +15,7 @@ class OrganisationsChoiceWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit OrganisationsChoiceWindow(QString filepath_, QWidget *parent = nullptr);
+    explicit OrganisationsChoiceWindow(QString filepath_, QString startCell, QWidget *parent = nullptr);
     ~OrganisationsChoiceWindow();
 
 private:

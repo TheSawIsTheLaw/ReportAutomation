@@ -11,6 +11,7 @@ public:
 
     QString savePath = "";
     QString readFilePath = "";
+    QString startCell = "";
 
     std::vector<QString> vectorOfNeededHeaders;
 };

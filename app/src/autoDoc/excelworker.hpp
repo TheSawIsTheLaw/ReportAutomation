@@ -13,7 +13,7 @@ class ExcelWorker
 public:
     ExcelWorker();
 
-    std::vector<QString> getFirstCellsText(QString filepath);
+    std::vector<QString> getFirstCellsText(QString filepath, QString startPosition);
 };
 
 #endif // EXCELWORKER_HPP

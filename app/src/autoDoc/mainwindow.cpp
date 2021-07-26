@@ -11,9 +11,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     facade = new Facade();
 
-    WordWorker worker;
-    worker.testCreateShit("C:/Users/dobri/Desktop/ReportAutomation/app/src/config");
-
     // test
 //    QFile file(QString("C:/Users/dobri/Downloads/exam_timetable_2020_2021_s2_all.xls"));
 //    bool isOpen = file.open(QIODevice::ReadOnly | QIODevice::Text);
