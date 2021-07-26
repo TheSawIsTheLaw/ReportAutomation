@@ -85,8 +85,8 @@ def createBarAndSave(groups, counts, savePath):
     pyplot.yticks(counts)
     pyplot.grid(axis = 'y', linestyle = "-")
 
-    if not os.path.exists("ImagesForYcfg"):
-        os.mkdir("ImagesForYcfg")
+    if not os.path.exists(PATH_TO_PYPLOT_IMAGES):
+        os.mkdir(PATH_TO_PYPLOT_IMAGES)
     pyplot.savefig(savePath, bbox_inches = 'tight', dpi = 100)
 
 
@@ -217,9 +217,16 @@ def formDocxFile(gotData, savePath):
 
     titleImage = doc.add_paragraph()
     add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(465), Pt(10))
-    add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(10), Pt(10)) # Добавляем только в том случае, если
-    # по имени файла не можем найти лого компании и по кайфу
 
+    companyPic = PATH_TO_COMPANIES_LOGOS + "/" + gotData[0].replace('"', "")
+    if not (os.path.exists(companyPic + ".jpg") or os.path.exists(companyPic + ".png") or os.path.exists(
+            companyPic + ".png")):
+        add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(10),
+                          Pt(10))  # Добавляем только в том случае, если
+    else:
+        add_float_picture(titleImage, PATH_TO_COMPANIES_LOGOS + "/" + gotData[0].replace('"', "") + ".jpg", Cm(2.5), None,
+                          Pt(10),
+                          Pt(10))
     titlePara = doc.add_paragraph()
     setParaFormatTitle(titlePara.paragraph_format,
                        titlePara.add_run("Аналитический отчёт по комплексному проекту {}".format(gotData[0])).font)
