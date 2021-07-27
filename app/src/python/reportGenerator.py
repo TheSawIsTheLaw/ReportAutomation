@@ -217,6 +217,8 @@ def formDocxFile(gotData, savePath):
     filename = savePath + "/" + filename
 
     titleImage = doc.add_paragraph()
+    # print("ПИЗДЕЦ!")
+    # print(os.getcwd())
     add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(465), Pt(10))
 
     companyPic = PATH_TO_COMPANIES_LOGOS + "/" + gotData[0].replace('"', "")
@@ -275,16 +277,15 @@ def main():
 
     try:
         tablePath = gotArgs[1]  # path to table to get info from
-        print(tablePath)
+        # print(tablePath)
         docSavePath = gotArgs[2]  # path to save document
-        print(docSavePath)
+        # print(docSavePath)
         configPath = gotArgs[3]  # path to configuration
-        print(configPath)
+        # print(configPath)
         workRowNumber = int(gotArgs[4])  # number of row from table
-        print(workRowNumber)
+        # print(workRowNumber)
     except Exception:
         return INVALID_ARGUMENTS_ERROR
-    print("ПИЗДА ЕБАНАЯ РАБОТАЙ БЛЯДЬ")
 
     dictOfRulesForDoc = getRulesFromConfig(configPath)
     gotInfo = getInfoFromExcelTableUsingRules(tablePath, dictOfRulesForDoc, workRowNumber)
