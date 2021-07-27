@@ -23,6 +23,13 @@
 #define FILE_NOT_EXIST_ERR 1
 
 // Legendary Facade. RIP CGCoursework.
+
+/*! \class Facade
+    \brief Contains all needed in case methods
+
+    Includes methods for configuration sets, set of used in program paths and initiation
+   of choice of organisation window
+ */
 class Facade
 {
 public:
@@ -32,8 +39,6 @@ public:
     void setAnalyzeFile(QString filePath);
     int setConfigByFile(QString filePath);
     void initChoiceOfOrgs(QWidget *parent);
-
-    int generateReport(int row);
 
 private:
     AutoDocConfiguration *configuration;
