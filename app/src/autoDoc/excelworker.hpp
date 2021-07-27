@@ -8,6 +8,11 @@
 #include "xlsxrichstring.h"
 #include "xlsxworkbook.h"
 
+/*! \class ExcelWorker
+    \brief Contains method for excel table analyze
+
+    May only get names of organisations. Noice.
+ */
 class ExcelWorker
 {
 public:
