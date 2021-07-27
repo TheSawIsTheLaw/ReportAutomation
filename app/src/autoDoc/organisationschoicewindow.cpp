@@ -1,6 +1,19 @@
 #include "organisationschoicewindow.hpp"
 #include "ui_organisationschoicewindow.h"
 
+/**
+ * \fn OrganisationsChoiceWindow::OrganisationsChoiceWindow(AutoDocConfiguration
+ * &configuration_, QWidget *parent): QDialog(parent), ui(new
+ * Ui::OrganisationsChoiceWindow), configuration(configuration_)
+ * \brief Init of OrganisationsChoiceWindow
+ *
+ * Inits Excel Worker and gets names of organisation for a listOfFOundedCompanies.
+ *
+ * \param AutoDocConfiguration *configuration_ - configuration class
+ * \param Parent a parent j.j
+ *
+ *  \return Inited OrganisationsChoiceWindow class
+ */
 OrganisationsChoiceWindow::OrganisationsChoiceWindow(
     AutoDocConfiguration &configuration_, QWidget *parent)
 : QDialog(parent), ui(new Ui::OrganisationsChoiceWindow), configuration(configuration_)
@@ -19,6 +32,13 @@ OrganisationsChoiceWindow::OrganisationsChoiceWindow(
 }
 
 OrganisationsChoiceWindow::~OrganisationsChoiceWindow() { delete ui; }
+
+/**
+ * \fn void OrganisationsChoiceWindow::on_buttonsGroup_accepted()
+ * \brief Slot for buttonsGroup when choice was accepted
+ *
+ * Generates reports for each selected name in listOfFOundedCompanies
+ */
 
 void OrganisationsChoiceWindow::on_buttonsGroup_accepted()
 {
