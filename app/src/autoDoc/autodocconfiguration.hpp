@@ -5,6 +5,12 @@
 #include <QString>
 #include <vector>
 
+/*! \class AutoDocConfiguration
+    \brief A test which contains needed in this place information
+
+    Contains from config path to save generated report, path to analyze excel table,
+   coordinates of start cell in excel style and path to configuration file.
+*/
 class AutoDocConfiguration
 {
 public:
@@ -16,8 +22,6 @@ public:
     QString readFilePath = "";
     QString startCell = "";
     QString configPath = PATH_TO_CONF;
-
-    std::vector<QString> vectorOfNeededHeaders;
 };
 
 #endif // AUTODOCCONFIGURATION_HPP
