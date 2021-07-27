@@ -4,6 +4,9 @@
 #include <QProcess>
 #include <QString>
 
+/*! \class ReportCreator
+    \brief Class that executes python script for all needed reports
+ */
 class ReportCreator
 {
 public:
