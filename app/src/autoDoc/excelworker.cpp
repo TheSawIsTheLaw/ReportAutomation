@@ -1,6 +1,30 @@
 #include "excelworker.hpp"
 
+/**
+ * \fn ExcelWorker::ExcelWorker()
+ * \brief Init of ExcelWorker class
+ *
+ *  Inits ExcelWorker using nothing
+ *
+ *  I guess, i should not use a class but...
+ *
+ *  \return Inited ExcelWorker class
+ */
 ExcelWorker::ExcelWorker() {}
+
+/**
+ * \fn std::vector<QString> ExcelWorker::getFirstCellsText(
+ * QString filepath, QString startPosition)
+ * \brief Gets first column rows names
+ *
+ * \param QString filepath - path of excel table to analyze
+ * \param QString startPosition - start position from which we will start (format:
+ * column-row in excel style)
+ *
+ * \warning It will look up throuh all non-empty cells in the row.
+ *
+ *  \return Vector of got names from start position
+ */
 
 std::vector<QString> ExcelWorker::getFirstCellsText(
     QString filepath, QString startPosition)
