@@ -5,6 +5,7 @@
 #include "excelworker.hpp"
 #include "reportcreator.hpp"
 #include <QDialog>
+#include <QProgressDialog>
 #include <QErrorMessage>
 #include <QListWidget>
 

@@ -6,6 +6,7 @@ OrganisationsChoiceWindow::OrganisationsChoiceWindow(
 : QDialog(parent), ui(new Ui::OrganisationsChoiceWindow)
 {
     ui->setupUi(this);
+    this->setWindowTitle("Обнаруженные данные в таблице");
     configuration = conf;
 
     ui->listOfFoundedCompanies->setSelectionMode(QAbstractItemView::MultiSelection);
@@ -21,28 +22,37 @@ OrganisationsChoiceWindow::~OrganisationsChoiceWindow() { delete ui; }
 
 void OrganisationsChoiceWindow::on_buttonsGroup_accepted()
 {
-    QList<QListWidgetItem *> items = ui->listOfFoundedCompanies->selectedItems();
+    QList<QModelIndex> items = ui->listOfFoundedCompanies->selectionModel()->selectedIndexes();
 
-    int startRow = configuration.startCell.split(" ")[1].toInt();
     int exitCode = 0;
-    for (int i = 0; i < items.size() && !exitCode; i++)
+
+    QProgressDialog progressDial("Генерим отчёты...", "Отмена", 0, items.size(), nullptr);
+    progressDial.setModal(true);
+    progressDial.setValue(0);
+    progressDial.wasCanceled();
+    for (int i = 0; i < items.size() && !exitCode && !progressDial.wasCanceled(); i++)
     {
+        qApp->processEvents();
+        progressDial.setValue(i);
         exitCode = ReportCreator(configuration.readFilePath, configuration.savePath,
-            configuration.configPath, startRow + i - 1)
+                                 configuration.configPath, items.at(i).row())
                        .startProc();
         if (exitCode == 1)
         {
             QErrorMessage *err = new QErrorMessage(this);
             err->setWindowTitle("Ошибка");
-            err->showMessage("Произошла ошибка во время обработки таблицы (" + items.at(i)->text() + ").\nПроверьте "
+            err->showMessage("Произошла ошибка во время обработки таблицы (" + ui->listOfFoundedCompanies->selectedItems().at(i)->text() + ").\nПроверьте "
                              "целостность конфигурационного файла или таблицы.");
         }
         else if (exitCode == 2)
         {
             QErrorMessage *err = new QErrorMessage(this);
             err->setWindowFilePath("Ошибка");
-            err->showMessage("Файл не доступен для записи (" + items.at(i)->text() + "). Закройте документ и повторите "
+            err->showMessage("Файл не доступен для записи (" + ui->listOfFoundedCompanies->selectedItems().at(i)->text() + "). Закройте документ и повторите "
                              "попытку ещё раз.");
         }
+
     }
+    progressDial.setValue(items.size());
+    progressDial.close();
 }

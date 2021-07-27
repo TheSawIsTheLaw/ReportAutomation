@@ -106,7 +106,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
     ranges = workbook[sheets[0]]
 
     headersStartIndexNumber = rules["startOfTable"][1] - 1
-    processingRowIndexNumber = rowNumber + rules["startOfTable"][1] - 1
+    processingRowIndexNumber = rowNumber + rules["startOfTable"][1]
     # print(ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
     # print(ranges[gotData[0][1] + str(processingRowIndexNumber)].value)
     # print(ranges[gotData[0][1] + str(headersStartIndexNumber)].value)

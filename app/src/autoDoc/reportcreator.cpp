@@ -21,8 +21,8 @@ int ReportCreator::startProc()
     creatorProc->setProgram("C:/Users/dobri/Desktop/ReportAutomation/app/src/python/dist/reportGenerator.exe");
     creatorProc->start();
     creatorProc->waitForFinished();
-    qDebug() << creatorProc->readAllStandardError().data();
-    qDebug() << QTextCodec::codecForName("cp1251")->toUnicode(creatorProc->readAll().data());
-    qDebug() << creatorProc->exitCode();
+//    qDebug() << creatorProc->readAllStandardError().data();
+//    qDebug() << QTextCodec::codecForName("cp1251")->toUnicode(creatorProc->readAll().data());
+//    qDebug() << creatorProc->exitCode();
     return creatorProc->exitCode();
 }
