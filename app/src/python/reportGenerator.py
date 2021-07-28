@@ -182,7 +182,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
 
 def setParaFormatPlainText(format, font):
-    format.first_line_indent = Cm(1.25)
+    format.first_line_indent = Cm(1.27)
     format.line_spacing = 1
     format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
     font.name = "Times New Roman"
@@ -194,9 +194,19 @@ def setParaFormatHeading(format, font):
     font.bold = True
 
 
+def setParaFormatAnal(format, font):
+    format.line_spacing = 1
+    format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    font.underline = True
+    font.name = "Times New Roman"
+    font.bold = True
+    font.size = Pt(16)
+
+
 def setParaFormatTitle(format, font):
     format.line_spacing = 1
     format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+    format.keep_together = True
     font.name = "Times New Roman"
     font.bold = True
     font.size = Pt(16)
@@ -209,15 +219,19 @@ def setPictureFormat(format, run, picPath):
 
 def formDocxFile(gotData, savePath):
     doc = docx.Document()
+    for section in doc.sections:
+        section.top_margin = Cm(2)
+        section.bottom_margin = Cm(2)
+        section.left_margin = Cm(2)
+        section.right_margin = Cm(1)
     filename = "Отчёт по {}".format(gotData[0])
     for s in ['*', '.', '/', '\\', '[', ']', ':', ';', '|', ',']:
         filename = filename.replace(s, '')
     filename += ".docx"
-    filename = filename.replace('"', "'")
+    filename = filename.replace('"', " ")
     filename = savePath + "/" + filename
 
     titleImage = doc.add_paragraph()
-    # print("ПИЗДЕЦ!")
     # print(os.getcwd())
     add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(465), Pt(10))
 
@@ -231,15 +245,17 @@ def formDocxFile(gotData, savePath):
                           Pt(10),
                           Pt(10))
     titlePara = doc.add_paragraph()
+    setParaFormatAnal(titlePara.paragraph_format, titlePara.add_run("АНАЛИТИЧЕСКИЙ ОТЧЁТ").font)
+    titlePara = doc.add_paragraph()
     setParaFormatTitle(titlePara.paragraph_format,
-                       titlePara.add_run("Аналитический отчёт по комплексному проекту {}".format(gotData[0])).font)
+                       titlePara.add_run("по комплексному проекту {}".format(gotData[0].replace('"', "«", 1).replace('"', "»", 1))).font)
     gotData.pop(0)
     # print(gotData)
     for currentDataPair in gotData:
         # Oh Satan...
         if PATH_TO_PYPLOT_IMAGES in str(currentDataPair[1]) or PATH_TO_SUBJECTS in str(currentDataPair[1]):
             headerPara = doc.add_paragraph()
-            setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
+            setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}:".format(currentDataPair[0])).font)
 
             picturePara = doc.add_paragraph()
             setPictureFormat(picturePara.paragraph_format, picturePara.add_run(), currentDataPair[1])
@@ -249,11 +265,10 @@ def formDocxFile(gotData, savePath):
                                  headerPara.add_run("{}: {}".format(currentDataPair[0], currentDataPair[1])).font)
         else:
             headerPara = doc.add_paragraph()
-            setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}".format(currentDataPair[0])).font)
+            setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}: ".format(currentDataPair[0])).font)
 
-            plainTextPara = doc.add_paragraph()
-            setParaFormatPlainText(plainTextPara.paragraph_format,
-                                   plainTextPara.add_run("{}".format(str(currentDataPair[1]).replace("\n", " "))).font)
+            setParaFormatPlainText(headerPara.paragraph_format,
+                                   headerPara.add_run("{}".format(str(currentDataPair[1]).replace("\n", " "))).font)
 
     try:
         doc.save(filename)
@@ -276,13 +291,13 @@ def main():
     gotArgs = sys.argv
 
     try:
-        tablePath = gotArgs[1]  # path to table to get info from
+        tablePath = gotArgs[3]  # path to table to get info from
         # print(tablePath)
-        docSavePath = gotArgs[2]  # path to save document
+        docSavePath = gotArgs[4]  # path to save document
         # print(docSavePath)
-        configPath = gotArgs[3]  # path to configuration
+        configPath = gotArgs[5]  # path to configuration
         # print(configPath)
-        workRowNumber = int(gotArgs[4])  # number of row from table
+        workRowNumber = int(gotArgs[6])  # number of row from table
         # print(workRowNumber)
     except Exception:
         return INVALID_ARGUMENTS_ERROR
