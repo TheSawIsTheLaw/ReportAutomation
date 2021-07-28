@@ -5,12 +5,12 @@ import sys
 import docx
 from docx.shared import Cm, Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
-from urllib.parse import unquote
+import locale
 
 from openpyxl.utils import get_column_letter
 from openpyxl.utils.cell import column_index_from_string
 from openpyxl import load_workbook
-from matplotlib import pyplot
+from matplotlib import pyplot, ticker
 
 from RGConstants import *
 from floatingImage import add_float_picture
@@ -77,12 +77,18 @@ def getRulesFromConfig(configPath):
 
 
 def createBarAndSave(groups, counts, savePath):
-    pyplot.bar(groups, counts,
-               color = ['paleturquoise', 'aquamarine', 'mediumspringgreen', 'mediumseagreen', 'green',
-                        'darkgreen'])
-    pyplot.ticklabel_format(axis = "y", scilimits = (6, 6))
-    pyplot.xlabel("Период")
-    pyplot.ylabel("Выплаты, млн. руб.")
+    ax = pyplot.subplot()
+    ax.bar(groups, counts,
+           color = ['paleturquoise', 'aquamarine', 'mediumspringgreen', 'mediumseagreen', 'green',
+                    'darkgreen'])
+    ax.ticklabel_format(axis = "y", style = 'plain')
+    locale.setlocale(locale.LC_ALL, '')
+    def moneyAxisFormatter(x, y):
+        return '{}'.format(locale.currency(x, grouping = True))
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(moneyAxisFormatter))
+    ax.spines.right.set_visible(False)
+    ax.spines.top.set_visible(False)
+    pyplot.ylabel("Выплаты")
     pyplot.yticks(counts)
     pyplot.grid(axis = 'y', linestyle = "-")
 
@@ -139,7 +145,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
                 gotData[i][1] = gotInfo
         elif gotData[i][0] == "[столбчатаядиаграмма]":
-            gotData[i][0] = "Диаграмма по выплатам"
+            gotData[i][0] = "Выплаты в прамках комплексного проекта"
             diagramCounter += 1
 
             # Damn.
@@ -184,6 +190,8 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 def setParaFormatPlainText(format, font):
     format.first_line_indent = Cm(1.27)
     format.line_spacing = 1
+    format.space_after = Pt(0)
+
     format.alignment = WD_PARAGRAPH_ALIGNMENT.JUSTIFY
     font.name = "Times New Roman"
     font.size = Pt(14)
@@ -233,22 +241,23 @@ def formDocxFile(gotData, savePath):
 
     titleImage = doc.add_paragraph()
     # print(os.getcwd())
-    add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(465), Pt(10))
+    add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Cm(15.34), Cm(1.49))
 
     companyPic = PATH_TO_COMPANIES_LOGOS + "/" + gotData[0].replace('"', "")
     if not (os.path.exists(companyPic + ".jpg") or os.path.exists(companyPic + ".png") or os.path.exists(
             companyPic + ".png")):
-        add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Pt(10),
-                          Pt(10))  # Добавляем только в том случае, если
+        add_float_picture(titleImage, PATH_TO_MPT_LOGO, Cm(5), None, Cm(2.26),
+                          Cm(1.49))  # Добавляем только в том случае, если
     else:
-        add_float_picture(titleImage, PATH_TO_COMPANIES_LOGOS + "/" + gotData[0].replace('"', "") + ".jpg", Cm(2.5), None,
-                          Pt(10),
-                          Pt(10))
+        add_float_picture(titleImage, PATH_TO_COMPANIES_LOGOS + "/" + gotData[0].replace('"', "") + ".jpg", Cm(2.5),
+                          None,
+                          Cm(2.26), Cm(1.49))
     titlePara = doc.add_paragraph()
     setParaFormatAnal(titlePara.paragraph_format, titlePara.add_run("АНАЛИТИЧЕСКИЙ ОТЧЁТ").font)
     titlePara = doc.add_paragraph()
     setParaFormatTitle(titlePara.paragraph_format,
-                       titlePara.add_run("по комплексному проекту {}".format(gotData[0].replace('"', "«", 1).replace('"', "»", 1))).font)
+                       titlePara.add_run("по комплексному проекту {}".format(
+                           gotData[0].replace('"', "«", 1).replace('"', "»", 1))).font)
     gotData.pop(0)
     # print(gotData)
     for currentDataPair in gotData:
@@ -265,7 +274,8 @@ def formDocxFile(gotData, savePath):
                                  headerPara.add_run("{}: {}".format(currentDataPair[0], currentDataPair[1])).font)
         else:
             headerPara = doc.add_paragraph()
-            setParaFormatHeading(headerPara.paragraph_format, headerPara.add_run("{}: ".format(currentDataPair[0])).font)
+            setParaFormatHeading(headerPara.paragraph_format,
+                                 headerPara.add_run("{}: ".format(currentDataPair[0])).font)
 
             setParaFormatPlainText(headerPara.paragraph_format,
                                    headerPara.add_run("{}".format(str(currentDataPair[1]).replace("\n", " "))).font)
