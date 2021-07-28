@@ -11,6 +11,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.utils.cell import column_index_from_string
 from openpyxl import load_workbook
 from matplotlib import pyplot, ticker
+from numpy import arange
 
 from RGConstants import *
 from floatingImage import add_float_picture
@@ -72,6 +73,7 @@ def getRulesFromConfig(configPath):
         curLineNumber += 1
 
     outRules["headers"] = headersInDocument
+    print(outRules)
 
     return outRules
 
@@ -88,13 +90,81 @@ def createBarAndSave(groups, counts, savePath):
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(moneyAxisFormatter))
     ax.spines.right.set_visible(False)
     ax.spines.top.set_visible(False)
-    pyplot.ylabel("Выплаты")
+    pyplot.ylabel("Величина выплат/затрат, руб.")
     pyplot.yticks(counts)
     pyplot.grid(axis = 'y', linestyle = "-")
 
     if not os.path.exists(PATH_TO_PYPLOT_IMAGES):
         os.mkdir(PATH_TO_PYPLOT_IMAGES)
-    pyplot.savefig(savePath, bbox_inches = 'tight', dpi = 100)
+    pyplot.savefig(savePath, bbox_inches = 'tight', dpi = 300)
+
+
+def createDoubleBarAndSave(groups, fcounts, scounts, savePath):
+    fig, ax = pyplot.subplots(figsize = (13, 7))
+    barWidth = 0.4
+    xBarPos = arange(len(groups))
+    fbar = ax.bar(xBarPos - barWidth / 2, fcounts, barWidth, label = 'Собственные средства', color = 'darkblue')
+    sbar = ax.bar(xBarPos + barWidth / 2, scounts, barWidth, label = 'Выплаты', color = 'darkred')
+
+    fLabels = []
+    sLabels = []
+    locale.setlocale(locale.LC_ALL, '')
+    for i in fcounts:
+        fLabels.append('{}'.format(locale.currency(i, grouping = True)))
+    for i in scounts:
+        sLabels.append('{}'.format(locale.currency(i, grouping = True)))
+
+    isLong = False
+    for j in fLabels:
+        if len(j) >= 16:
+            isLong = True
+    if isLong:
+        ax.bar_label(fbar, labels = fLabels, padding = 3, fontsize = 8, weight = 'bold')
+    else:
+        ax.bar_label(fbar, labels = fLabels, padding = 3, fontsize = 10, weight = 'bold')
+
+    isLong = False
+    for j in sLabels:
+        if len(j) >= 16:
+            isLong = True
+
+    if isLong:
+        ax.bar_label(sbar, labels = sLabels, padding = 3, fontsize = 8, weight = 'bold')
+    else:
+        ax.bar_label(sbar, labels = sLabels, padding = 3, fontsize = 10, weight = 'bold')
+
+    pyplot.xticks(weight = 'bold', fontsize = 16)
+    pyplot.yticks(weight = 'bold', fontsize = 12)
+
+    ax.set_xticks(xBarPos)
+    ax.set_xticklabels(groups)
+    ax.legend(prop = {'size': 12, 'weight': 'bold'})
+    ax.ticklabel_format(axis = "y", style = 'plain')
+
+    def moneyAxisFormatter(x, y):
+        return '{}'.format(locale.currency(x, grouping = True))
+
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(moneyAxisFormatter))
+    ax.spines.right.set_visible(False)
+    ax.spines.top.set_visible(False)
+    pyplot.ylabel("Величина выплат/затрат, руб.", weight = 'bold', fontsize = 14)
+
+    fcounts.extend(scounts)
+    fcounts.sort()
+    i = 1
+    # Because of fucking pyplot can not fucking space this fucking ticks
+    # while i < len(fcounts):
+    #     if abs(fcounts[i] - fcounts[i - 1]) < 800000:
+    #         fcounts.pop(i)
+    #         i -= 1
+    #     i += 1
+
+    # pyplot.yticks(fcounts, fontsize = 6)
+    # pyplot.grid(axis = 'y', linestyle = "-")
+
+    if not os.path.exists(PATH_TO_PYPLOT_IMAGES):
+        os.mkdir(PATH_TO_PYPLOT_IMAGES)
+    pyplot.savefig(savePath, bbox_inches = 'tight', dpi = 300)
 
 
 '''
@@ -131,6 +201,9 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
                     gotInfo = ranges[get_column_letter(curCol) + str(processingRowIndexNumber)].value
                     if type(gotInfo) == datetime.datetime:
                         gotInfo = "{}.{}.{}".format(gotInfo.day, gotInfo.month, gotInfo.year)
+                    elif type(gotInfo) == float: # Не забудь об этом написать в документации))
+                        locale.setlocale(locale.LC_ALL, '')
+                        gotInfo = '{}'.format(locale.currency(gotInfo, grouping = True))
                     gotData.insert(i, [gotHeader, gotInfo])
 
                     curCol += 1
@@ -170,14 +243,47 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             createBarAndSave(groups, counts, imgPath)
 
             gotData[i][1] = imgPath
+        elif gotData[i][0] == "[двойнаястолбчатаядиаграмма]":
+            gotData[i][0] = "Выплаты в прамках комплексного проекта"
+            diagramCounter += 1
+
+            # Damn.
+            namesOfColumnsInDiagram = gotData[i][1].split("-")
+            endLetter = namesOfColumnsInDiagram[1]
+            namesOfColumnsInDiagram = [namesOfColumnsInDiagram[0]]
+            curLetter = namesOfColumnsInDiagram[0]
+            # print(endLetter)
+            curLetter = column_index_from_string(curLetter)
+            # print(curLetter, column_index_from_string(endLetter))
+            while curLetter < column_index_from_string(endLetter):
+                curLetter += 1
+                namesOfColumnsInDiagram.append(get_column_letter(curLetter))
+
+            groups = []
+            fcounts = []
+            scounts = []
+            curColumn = 0
+            while curColumn < len(namesOfColumnsInDiagram):
+                fcounts.append(ranges[namesOfColumnsInDiagram[curColumn] + str(processingRowIndexNumber)].value)
+                curColumn += 1
+                groups.append(ranges[namesOfColumnsInDiagram[curColumn] + str(headersStartIndexNumber)].value)
+                scounts.append(ranges[namesOfColumnsInDiagram[curColumn] + str(processingRowIndexNumber)].value)
+                curColumn += 1
+
+            imgPath = "{}/figPyYcfg{}.png".format(PATH_TO_PYPLOT_IMAGES, diagramCounter)
+            for k in range(len(groups)):
+                groups[k] = groups[k][-9:-4]
+            createDoubleBarAndSave(groups, fcounts, scounts, imgPath)
+
+            gotData[i][1] = imgPath
         elif gotData[i][0] == "[карта]":
             gotData[i][0] = ranges[gotData[i][1] + str(headersStartIndexNumber)].value
-
             gotInfo = ranges[gotData[i][1] + str(processingRowIndexNumber)].value
             gotData[i][1] = "{}/{}.png".format(PATH_TO_SUBJECTS, gotInfo)
-
         i += 1
-    # print(gotData)
+
+
+    print(gotData)
 
     gotData.insert(0, ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
 
@@ -222,7 +328,7 @@ def setParaFormatTitle(format, font):
 
 def setPictureFormat(format, run, picPath):
     format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-    run.add_picture(picPath, width = Cm(12))
+    run.add_picture(picPath, width = Cm(17))
 
 
 def formDocxFile(gotData, savePath):
