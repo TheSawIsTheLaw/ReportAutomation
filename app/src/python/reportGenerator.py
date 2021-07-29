@@ -73,7 +73,7 @@ def getRulesFromConfig(configPath):
         curLineNumber += 1
 
     outRules["headers"] = headersInDocument
-    print(outRules)
+    # print(outRules)
 
     return outRules
 
@@ -283,7 +283,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
         i += 1
 
 
-    print(gotData)
+    # print(gotData)
 
     gotData.insert(0, ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
 
@@ -342,7 +342,7 @@ def formDocxFile(gotData, savePath):
     for s in ['*', '.', '/', '\\', '[', ']', ':', ';', '|', ',']:
         filename = filename.replace(s, '')
     filename += ".docx"
-    filename = filename.replace('"', " ")
+    filename = filename.replace('"', "").replace("»", "").replace("«", "").replace("\n", "")
     filename = savePath + "/" + filename
 
     titleImage = doc.add_paragraph()
@@ -389,6 +389,7 @@ def formDocxFile(gotData, savePath):
     try:
         doc.save(filename)
     except Exception:
+        print()
         return PERMISSION_ERROR
     return 0
 
@@ -407,13 +408,13 @@ def main():
     gotArgs = sys.argv
 
     try:
-        tablePath = gotArgs[3]  # path to table to get info from
+        tablePath = gotArgs[1]  # path to table to get info from
         # print(tablePath)
-        docSavePath = gotArgs[4]  # path to save document
+        docSavePath = gotArgs[2]  # path to save document
         # print(docSavePath)
-        configPath = gotArgs[5]  # path to configuration
+        configPath = gotArgs[3]  # path to configuration
         # print(configPath)
-        workRowNumber = int(gotArgs[6])  # number of row from table
+        workRowNumber = int(gotArgs[4])  # number of row from table
         # print(workRowNumber)
     except Exception:
         return INVALID_ARGUMENTS_ERROR
