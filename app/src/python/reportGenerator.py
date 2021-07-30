@@ -16,12 +16,20 @@ from numpy import arange
 from RGConstants import *
 from floatingImage import add_float_picture
 
+'''
+    Just a raise :)
+'''
+
 
 def throwWrongStructure():
     raise Exception("Конфигурационный файл не соответствует требуемому формату")
 
 
-# fTest: python reportGenerator.py "C:\Users\dobri\Desktop\Свод проектов 529.xlsx" . C:\Users\dobri\Desktop\ReportAutomation\app\src\config\stdConfig.ycfg 1
+'''
+    Skip comments in configuration file
+'''
+
+
 def goToNextSharps(lines, curLineNumber):
     while curLineNumber < len(lines):
         if lines[curLineNumber][:3] == "###":
