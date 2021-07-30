@@ -78,6 +78,11 @@ def getRulesFromConfig(configPath):
     return outRules
 
 
+'''
+    Function that creates a bar plot, saves it
+'''
+
+
 def createBarAndSave(groups, counts, savePath):
     ax = pyplot.subplot()
     ax.bar(groups, counts,
@@ -85,8 +90,10 @@ def createBarAndSave(groups, counts, savePath):
                     'darkgreen'])
     ax.ticklabel_format(axis = "y", style = 'plain')
     locale.setlocale(locale.LC_ALL, '')
+
     def moneyAxisFormatter(x, y):
         return '{}'.format(locale.currency(x, grouping = True))
+
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(moneyAxisFormatter))
     ax.spines.right.set_visible(False)
     ax.spines.top.set_visible(False)
@@ -97,6 +104,11 @@ def createBarAndSave(groups, counts, savePath):
     if not os.path.exists(PATH_TO_PYPLOT_IMAGES):
         os.mkdir(PATH_TO_PYPLOT_IMAGES)
     pyplot.savefig(savePath, bbox_inches = 'tight', dpi = 300)
+
+
+'''
+    Function that creates a bar plot with splited bars and saves it
+'''
 
 
 def createDoubleBarAndSave(groups, fcounts, scounts, savePath):
@@ -201,7 +213,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
                     gotInfo = ranges[get_column_letter(curCol) + str(processingRowIndexNumber)].value
                     if type(gotInfo) == datetime.datetime:
                         gotInfo = "{}.{}.{}".format(gotInfo.day, gotInfo.month, gotInfo.year)
-                    elif type(gotInfo) == float: # Не забудь об этом написать в документации))
+                    elif type(gotInfo) == float:  # Не забудь об этом написать в документации))
                         locale.setlocale(locale.LC_ALL, '')
                         gotInfo = '{}'.format(locale.currency(gotInfo, grouping = True))
                     gotData.insert(i, [gotHeader, gotInfo])
@@ -218,7 +230,7 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
 
                 gotData[i][1] = gotInfo
         elif gotData[i][0] == "[столбчатаядиаграмма]":
-            gotData[i][0] = "Выплаты в прамках комплексного проекта"
+            gotData[i][0] = "Выплаты в рамках комплексного проекта"
             diagramCounter += 1
 
             # Damn.
@@ -282,7 +294,6 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
             gotData[i][1] = "{}/{}.png".format(PATH_TO_SUBJECTS, gotInfo)
         i += 1
 
-
     # print(gotData)
 
     gotData.insert(0, ranges[rules["startOfTable"][0] + str(processingRowIndexNumber)].value)
@@ -291,6 +302,11 @@ def getInfoFromExcelTableUsingRules(excelTablePath, rules, rowNumber):
     # print(gotData)
 
     return gotData
+
+
+'''
+    Sets paragraph's properties to plain text
+'''
 
 
 def setParaFormatPlainText(format, font):
@@ -303,9 +319,19 @@ def setParaFormatPlainText(format, font):
     font.size = Pt(14)
 
 
+'''
+    Sets paragraph's properties to header
+'''
+
+
 def setParaFormatHeading(format, font):
     setParaFormatPlainText(format, font)
     font.bold = True
+
+
+'''
+    Sets paragraph's properties to analytics
+'''
 
 
 def setParaFormatAnal(format, font):
@@ -317,6 +343,11 @@ def setParaFormatAnal(format, font):
     font.size = Pt(16)
 
 
+'''
+    Sets paragraph's properties to title text
+'''
+
+
 def setParaFormatTitle(format, font):
     format.line_spacing = 1
     format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
@@ -326,9 +357,19 @@ def setParaFormatTitle(format, font):
     font.size = Pt(16)
 
 
+'''
+    Adds a picture to the paragraph
+'''
+
+
 def setPictureFormat(format, run, picPath):
     format.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
     run.add_picture(picPath, width = Cm(17))
+
+
+'''
+    Forms .docx report from given information
+'''
 
 
 def formDocxFile(gotData, savePath):
