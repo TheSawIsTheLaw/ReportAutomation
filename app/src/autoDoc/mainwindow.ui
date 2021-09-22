@@ -52,7 +52,7 @@
          <enum>Qt::RightToLeft</enum>
         </property>
         <property name="text">
-         <string>Автоматизированное создание отчётов (ну почти)</string>
+         <string>Автоматизированное создание отчётов</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -146,7 +146,7 @@
          </font>
         </property>
         <property name="text">
-         <string>Исполнить предначертанное</string>
+         <string>Перейти к следующим действиям</string>
         </property>
        </widget>
       </item>
